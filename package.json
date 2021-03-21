@@ -7,9 +7,9 @@
   "license": "MIT",
   "dependencies": {
     "dotenv": "^8.2.0",
-    "express": "^4.17.1"
+    "express": "^4.17.1",
+    "mariadb": "^2.5.3"
   },
-
   "scripts": {
     "start": "node server.js"
   }
