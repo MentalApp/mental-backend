@@ -5,7 +5,7 @@
         "payload": "dsadasd"
     },
     "cookieConfig": {
-        "exprires": 50000000000
+        "expires": 50000000000
     },
     "authKey": "accessToken",
     "rabbitMQConfig":{
