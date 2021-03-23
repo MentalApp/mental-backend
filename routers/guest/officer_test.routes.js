@@ -5,7 +5,6 @@ module.exports = app => {
   var router = require("express").Router();
 
   router.post("/", officerTests.create);
-  router.put("/:id", officerTests.update);
 
   app.use('/api/guest/officer_tests', authMiddleware.authGuest, router);
 };
