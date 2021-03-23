@@ -1,0 +1,15 @@
+{
+    "jwtConfig": {
+        "secretKey": "kjdsadjskadjkasdjksadjkajdajkdlkgjfdhjfjk",
+        "exprire": 30,
+        "payload": "dsadasd"
+    },
+    "cookieConfig": {
+        "exprires": 50000000000
+    },
+    "authKey": "accessToken",
+    "rabbitMQConfig":{
+        "url":"localhost",
+        "port":"8866"
+    }
+}

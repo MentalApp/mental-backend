@@ -6,13 +6,17 @@
   "author": "ncphuoc <phuocnguyen1999a10@gmail.com>",
   "license": "MIT",
   "dependencies": {
+    "amqplib": "^0.7.1",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "mariadb": "^2.5.3",
     "sequelize": "^6.6.0",
-    "sequelize-cli": "^6.2.0"
+    "sequelize-cli": "^6.2.0",
+    "http-status-codes": "^2.1.4",
+    "jsonwebtoken": "^8.5.1"
   },
   "scripts": {
-    "start": "node server.js"
+    "start": "NODE_ENV=development node server.js",
+    "runproduction": "NODE_ENV=production node server.js"
   }
 }
