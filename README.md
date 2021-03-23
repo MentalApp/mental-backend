@@ -28,7 +28,7 @@ Follow these instructions to set up this project on local machine.
 ### Installing
 - Clone project
   ```
-  git clone https://github.com/phuocck/mental-backend.git && cd mental-backend
+  git clone https://github.com/NamNguyen99/mental-backend.git && cd mental-backend
   ```
 - Install dependencies
   ```
