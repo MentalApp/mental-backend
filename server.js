@@ -1,18 +1,9 @@
 const express = require('express');
 const env = require('dotenv');
-const dataAccess = require('./dataaccess/dataaccess');
 env.config();
 
 const app = express();
 const PORT = process.env.PORT || 8080;
-
-//#region router
-const authRouter = require('./routers/auth.router');
-//#endregion
-
-//#region middleware
-const authMiddleware = require('./middlewares/auth.middleware');
-//#endregion
 
 app.use(express.json());
 
@@ -22,11 +13,9 @@ app.get('/', (req, res) => {
     })
 });
 
-// app.use('/admin/api', authMiddleware.authAdmin,);
-
-app.use('/admin', authRouter);
-app.use('/guest/api', authMiddleware.authGuest, authRouter);
-
+require('./routers/admin/auth.routes')(app);
+require("./routers/admin/user.routes")(app);
+require("./routers/guest/officer_test.routes")(app);
 
 app.listen(PORT, (res) => {
     console.log(`App listening on port ${PORT}`);

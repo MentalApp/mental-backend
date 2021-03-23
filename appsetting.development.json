@@ -1,7 +1,7 @@
 {
     "jwtConfig": {
         "secretKey": "kjdsadjskadjkasdjksadjkajdajkdlkgjfdhjfjk",
-        "exprire": 30,
+        "expire": 30,
         "payload": "dsadasd"
     },
     "cookieConfig": {
