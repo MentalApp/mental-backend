@@ -1,13 +1,16 @@
 const jwt = require('jsonwebtoken');
-const appSetting = require('../appconfig/app.config');
+const appSetting = require('../../appconfig/app.config');
+const db = require("../../database/models");
+const User = db.User;
+const Op = db.Sequelize.Op;
 
 const authController = {
     login: async (req, res) => {
         //TODO => đoạn này lấy thêm user để check exist
         try {
-            if (req.body && req.body.userName && req.body.password) {
+            if (req.body && req.body.email && req.body.password) {
                 const token = jwt.sign({
-                    user: req.body.userName,
+                    user: req.body.email,
                     password: req.body.password
                 }, appSetting.jwtConfig.secretKey);
 
@@ -41,7 +44,11 @@ const authController = {
         const decode = jwt.verify(token, appSetting.jwtConfig.secretKey);
         if (decode) {
             //TODO => lấy user
-
+			console.log(decode.user)
+            const user = await User.findOne({ where: { email: decode.user } });
+            res.status(200).json({
+                message: user
+            });
         }
 
     }

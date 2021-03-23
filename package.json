@@ -9,6 +9,7 @@
     "amqplib": "^0.7.1",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
+    "express-validator": "^6.10.0",
     "mariadb": "^2.5.3",
     "sequelize": "^6.6.0",
     "sequelize-cli": "^6.2.0",
