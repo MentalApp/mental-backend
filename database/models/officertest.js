@@ -28,10 +28,13 @@ module.exports = (sequelize, DataTypes) => {
     liePredictPercent: DataTypes.DOUBLE,
     testTime: DataTypes.INTEGER,
     testVersion: DataTypes.STRING,
-    userConfirmId: DataTypes.STRING
+    userConfirmId: DataTypes.STRING,
+    otherSymptom: DataTypes.TEXT,
+    otherPeople: DataTypes.TEXT
   }, {
     sequelize,
-    modelName: 'OfficerTest',
+    charset: 'utf8',
+    modelName: 'OfficerTest'
   });
   return OfficerTest;
 };

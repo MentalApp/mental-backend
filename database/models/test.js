@@ -21,6 +21,7 @@ module.exports = (sequelize, DataTypes) => {
     liePercent: DataTypes.DOUBLE
   }, {
     sequelize,
+    charset: 'utf8',
     modelName: 'Test',
   });
   return Test;

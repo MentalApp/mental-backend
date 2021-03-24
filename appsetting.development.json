@@ -1,15 +1,15 @@
 {
-    "jwtConfig": {
-        "secretKey": "kjdsadjskadjkasdjksadjkajdajkdlkgjfdhjfjk",
-        "expire": 30,
-        "payload": "dsadasd"
-    },
-    "cookieConfig": {
-        "expires": 50000000000
-    },
-    "authKey": "accessToken",
-    "rabbitMQConfig":{
-        "url":"localhost",
-        "port":"8866"
-    }
+  "jwtConfig": {
+    "secretKey": "kjdsadjskadjkasdjksadjkajdajkdlkgjfdhjfjk",
+    "expire": 30,
+    "payload": "dsadasd"
+  },
+  "cookieConfig": {
+    "expires": 50000000000
+  },
+  "authKey": "accesstoken",
+  "rabbitMQConfig":{
+    "url":"localhost",
+    "port":"8866"
+  }
 }

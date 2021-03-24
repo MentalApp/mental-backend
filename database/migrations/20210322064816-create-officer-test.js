@@ -53,6 +53,12 @@ module.exports = {
       userConfirmId: {
         type: Sequelize.STRING
       },
+      otherSymptom: {
+        type: Sequelize.TEXT
+      },
+      otherPeople: {
+        type: Sequelize.TEXT
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE
@@ -61,6 +67,9 @@ module.exports = {
         allowNull: false,
         type: Sequelize.DATE
       }
+    },
+    {
+      charset: 'utf8'
     });
   },
   down: async (queryInterface, Sequelize) => {

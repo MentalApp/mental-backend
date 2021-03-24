@@ -1,4 +1,4 @@
 const commonMiddleware = (req, res, next) => {
-    next();
+  next();
 }
 module.exports = commonMiddleware;

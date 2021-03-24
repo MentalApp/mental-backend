@@ -19,6 +19,7 @@ module.exports = (sequelize, DataTypes) => {
     testVersionId: DataTypes.STRING
   }, {
     sequelize,
+    charset: 'utf8',
     modelName: 'SubTest',
   });
   return SubTest;
