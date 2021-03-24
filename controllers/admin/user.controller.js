@@ -1,10 +1,13 @@
 const db = require("../../database/models");
+const bcrypt = require("bcrypt-nodejs");
+
 const User = db.User;
 const Op = db.Sequelize.Op;
 
 const userController = {
   create: async (req, res) => {
     const user = req.body;
+    user.password = bcrypt.hashSync(user.password, bcrypt.genSaltSync(8), null)
 
     User.create(user)
       .then(data => {
@@ -50,6 +53,7 @@ const userController = {
 
   update: async (req, res) => {
     const id = req.params.id;
+    req.body.password = bcrypt.hashSync(req.body.password, bcrypt.genSaltSync(8), null)
 
     User.update(req.body, {
       where: { id: id }
