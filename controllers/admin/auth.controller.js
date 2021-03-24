@@ -1,8 +1,9 @@
 const jwt = require('jsonwebtoken');
+const bcrypt = require("bcrypt-nodejs");
+
 const appSetting = require('../../appconfig/app.config');
 const db = require("../../database/models");
 const User = db.User;
-const Op = db.Sequelize.Op;
 
 const authController = {
   login: async (req, res) => {
@@ -10,7 +11,7 @@ const authController = {
     if (!user) {
       res.status(404).json({ message: 'Authentication failed. User not found.' });
     } else if (user) {
-      if (user.password != req.body.password) {
+      if (!bcrypt.compareSync(req.body.password, user.password)) {
         res.status(401).json({ message: 'Authentication failed. Wrong password.' });
       } else {
         token = jwt.sign({ 
