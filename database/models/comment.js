@@ -19,6 +19,7 @@ module.exports = (sequelize, DataTypes) => {
     comment: DataTypes.TEXT
   }, {
     sequelize,
+    charset: 'utf8',
     modelName: 'Comment',
   });
   return Comment;

@@ -17,6 +17,7 @@ module.exports = (sequelize, DataTypes) => {
     question: DataTypes.STRING
   }, {
     sequelize,
+    charset: 'utf8',
     modelName: 'TestPool',
   });
   return TestPool;

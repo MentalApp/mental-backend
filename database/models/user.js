@@ -27,6 +27,7 @@ module.exports = (sequelize, DataTypes) => {
     position: DataTypes.STRING
   }, {
     sequelize,
+    charset: 'utf8',
     modelName: 'User',
   });
   return User;

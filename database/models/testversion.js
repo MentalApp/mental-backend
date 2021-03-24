@@ -18,6 +18,7 @@ module.exports = (sequelize, DataTypes) => {
     index: DataTypes.INTEGER
   }, {
     sequelize,
+    charset: 'utf8',
     modelName: 'TestVersion',
   });
   return TestVersion;

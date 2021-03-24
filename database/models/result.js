@@ -19,6 +19,7 @@ module.exports = (sequelize, DataTypes) => {
     filterOfficer: DataTypes.INTEGER
   }, {
     sequelize,
+    charset: 'utf8',
     modelName: 'Result',
   });
   return Result;
