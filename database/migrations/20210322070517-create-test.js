@@ -18,6 +18,7 @@ module.exports = {
         type: Sequelize.TEXT
       },
       code: {
+        unique: true,
         type: Sequelize.STRING
       },
       liePercent: {
