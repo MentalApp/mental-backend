@@ -1,5 +1,6 @@
-const db = require("../../database/models");
 const bcrypt = require("bcrypt-nodejs");
+const db = require("../../database/models");
+const userSerializer = require("../../serializers/user.serializer")
 
 const User = db.User;
 const Op = db.Sequelize.Op;
@@ -11,12 +12,15 @@ const userController = {
 
     User.create(user)
       .then(data => {
-        res.send(data);
+        res.json({
+          success: true,
+          data: userSerializer.new(data)
+        });
       })
       .catch(err => {
-        res.status(500).send({
-          message:
-            err.message || "Some error occurred while creating the User."
+        res.json({
+          success: false,
+          error: err.message || "Some error occurred while creating the User."
         });
       });
   },
@@ -27,12 +31,15 @@ const userController = {
 
     User.findAll({ where: condition })
       .then(data => {
-        res.send(data);
+        res.json({
+          success: true,
+          data: data.map(item => userSerializer.new(item))
+        });
       })
       .catch(err => {
-        res.status(500).send({
-          message:
-            err.message || "Some error occurred while retrieving users."
+        res.json({
+          success: false,
+          error: err.message || "Some error occurred while retrieving users."
         });
       });
   },
@@ -42,11 +49,15 @@ const userController = {
 
     User.findByPk(id)
       .then(data => {
-        res.send(data);
+        res.json({
+          success: true,
+          data: userSerializer.new(data)
+        });
       })
       .catch(err => {
-        res.status(500).send({
-          message: "Error retrieving User with id=" + id
+        res.status(404).json({
+          success: false,
+          error: err.message || "Error retrieving User with id=" + id
         });
       });
   },
@@ -60,18 +71,19 @@ const userController = {
     })
       .then(num => {
         if (num == 1) {
-          res.send({
-            message: "User was updated successfully."
+          res.json({
+            success: true
           });
         } else {
-          res.send({
-            message: `Cannot update User with id=${id}. Maybe User was not found or req.body is empty!`
+          res.json({
+            success: false
           });
         }
       })
       .catch(err => {
-        res.status(500).send({
-          message: "Error updating User with id=" + id
+        res.status(500).json({
+          success: false,
+          error: err.message || "Error updating User with id=" + id
         });
       });
   },
@@ -84,34 +96,19 @@ const userController = {
     })
       .then(num => {
         if (num == 1) {
-          res.send({
-            message: "User was deleted successfully!"
+          res.json({
+            success: true
           });
         } else {
-          res.send({
-            message: `Cannot delete User with id=${id}. Maybe User was not found!`
+          res.json({
+            success: false
           });
         }
       })
       .catch(err => {
-        res.status(500).send({
-          message: "Could not delete User with id=" + id
-        });
-      });
-  },
-
-  deleteAll: async (req, res) => {
-    User.destroy({
-      where: {},
-      truncate: false
-    })
-      .then(nums => {
-        res.send({ message: `${nums} Users were deleted successfully!` });
-      })
-      .catch(err => {
-        res.status(500).send({
-          message:
-            err.message || "Some error occurred while removing all Users."
+        res.status(500).json({
+          success: false,
+          error: err.message || "Could not delete User with id=" + id
         });
       });
   }

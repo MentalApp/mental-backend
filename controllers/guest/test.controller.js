@@ -1,4 +1,6 @@
 const db = require("../../database/models");
+const testSerializer = require("../../serializers/test.serializer")
+
 const TestPool = db.TestPool;
 const Test = db.Test;
 const Op = db.Sequelize.Op;
@@ -20,12 +22,15 @@ const testController = {
 
     TestPool.findAll({ where: condition })
       .then(data => {
-        res.send(data); // data need sort with questionIds
+        res.json({
+          success: true,
+          data: testSerializer.new(test, data)
+        });
       })
       .catch(err => {
-        res.status(500).send({
-          message:
-            err.message || "Some error occurred while retrieving test pool."
+        res.status(500).json({
+          success: false,
+          error: err.message || "Some error occurred while retrieving test."
         });
       });
   }

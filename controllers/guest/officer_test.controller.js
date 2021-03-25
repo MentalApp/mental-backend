@@ -1,6 +1,7 @@
 const db = require("../../database/models");
+const officerTestSerializer = require("../../serializers/officer_test.serializer")
+
 const OfficerTest = db.OfficerTest;
-// const Op = db.Sequelize.Op;
 
 const officerTestController = {
   create: async (req, res) => {
@@ -9,13 +10,15 @@ const officerTestController = {
 
     OfficerTest.create(officerTest)
       .then(data => {
-        data.answer = JSON.parse(data.answer)
-        res.send(data);
+        res.json({
+          success: true,
+          data: officerTestSerializer.new(data)
+        });
       })
       .catch(err => {
-        res.status(500).send({
-          message:
-            err.message || "Some error occurred while creating the User."
+        res.status(500).json({
+          success: false,
+          error: err.message || "Some error occurred while creating the User."
         });
       });
   }

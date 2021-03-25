@@ -1,4 +1,7 @@
 const db = require("../../database/models");
+const testSerializer = require("../../serializers/test.serializer")
+const testPoolSerializer = require("../../serializers/test_pool.serializer")
+
 const Test = db.Test;
 const TestPool = db.TestPool;
 const Op = db.Sequelize.Op;
@@ -9,12 +12,15 @@ const testController = {
 
     TestPool.create(testPool)
       .then(data => {
-        res.send(data);
+        res.json({
+          success: true,
+          data: testPoolSerializer.new(data)
+        });
       })
       .catch(err => {
-        res.status(500).send({
-          message:
-            err.message || "Some error occurred while creating the Test Pool."
+        res.status(500).json({
+          success: false,
+          error: err.message || "Some error occurred while creating the Test Pool."
         });
       });
   },
@@ -25,12 +31,15 @@ const testController = {
 
     TestPool.findAll({ where: condition })
       .then(data => {
-        res.send(data);
+        res.json({
+          success: true,
+          data: data.map(item => testPoolSerializer.new(item))
+        });
       })
       .catch(err => {
-        res.status(500).send({
-          message:
-            err.message || "Some error occurred while retrieving test pool."
+        res.status(500).json({
+          success: false,
+          error: err.message || "Some error occurred while retrieving test pool."
         });
       });
   },
@@ -44,17 +53,18 @@ const testController = {
       .then(num => {
         if (num == 1) {
           res.send({
-            message: "Test pool was deleted successfully!"
+            success: true
           });
         } else {
           res.send({
-            message: `Cannot delete Test pool with id=${id}. Maybe User was not found!`
+            success: false
           });
         }
       })
       .catch(err => {
         res.status(500).send({
-          message: "Could not delete Test pool with id=" + id
+          success: false,
+          error: err.message || "Could not delete Test pool with id=" + id
         });
       });
   },
@@ -65,13 +75,15 @@ const testController = {
 
     Test.create(test)
       .then(data => {
-        data.questionIds = JSON.parse(data.questionIds)
-        res.send(data);
+        res.json({
+          success: true,
+          data: testSerializer.new(data)
+        });
       })
       .catch(err => {
-        res.status(500).send({
-          message:
-            err.message || "Some error occurred while creating the Test."
+        res.status(500).json({
+          success: false,
+          error: err.message || "Some error occurred while creating the Test."
         });
       });
   },
@@ -82,12 +94,15 @@ const testController = {
 
     Test.findAll({ where: condition })
       .then(data => {
-        res.send(data);
+        res.json({
+          success: true,
+          data: data.map(item => testSerializer.new(item))
+        });
       })
       .catch(err => {
-        res.status(500).send({
-          message:
-            err.message || "Some error occurred while retrieving tests."
+        res.status(500).json({
+          success: false,
+          error: err.message || "Some error occurred while retrieving tests."
         });
       });
   },
@@ -97,11 +112,15 @@ const testController = {
 
     Test.findByPk(id)
       .then(data => {
-        res.send(data);
+        res.json({
+          success: true,
+          data: testSerializer.new(data)
+        });
       })
       .catch(err => {
-        res.status(500).send({
-          message: "Error retrieving Test with id=" + id
+        res.status(500).json({
+          success: false,
+          error: err.message || "Error retrieving Test with id=" + id
         });
       });
   },
@@ -114,18 +133,19 @@ const testController = {
     })
       .then(num => {
         if (num == 1) {
-          res.send({
-            message: "Test was updated successfully."
+          res.json({
+            success: true
           });
         } else {
-          res.send({
-            message: `Cannot update Test with id=${id}. Maybe Test was not found or req.body is empty!`
+          res.json({
+            success: false
           });
         }
       })
       .catch(err => {
-        res.status(500).send({
-          message: "Error updating Test with id=" + id
+        res.status(500).json({
+          success: false,
+          error: err.message || "Error updating Test with id=" + id
         });
       });
   },
@@ -138,18 +158,19 @@ const testController = {
     })
       .then(num => {
         if (num == 1) {
-          res.send({
-            message: "Test was deleted successfully!"
+          res.json({
+            success: true
           });
         } else {
-          res.send({
-            message: `Cannot delete Test with id=${id}. Maybe Test was not found!`
+          res.json({
+            success: false
           });
         }
       })
       .catch(err => {
         res.status(500).send({
-          message: "Could not delete Test with id=" + id
+          status: false,
+          error: err.message || "Could not delete Test with id=" + id
         });
       });
   }

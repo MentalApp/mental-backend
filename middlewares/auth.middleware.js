@@ -12,12 +12,14 @@ const authMiddleware = {
         next();
       } else {
         res.status(StatusCodes.UNAUTHORIZED).json({
-          message: getReasonPhrase(StatusCodes.UNAUTHORIZED)
+          success: false,
+          error: getReasonPhrase(StatusCodes.UNAUTHORIZED)
         })
       }
     } else {
       res.status(StatusCodes.UNAUTHORIZED).json({
-        message: getReasonPhrase(StatusCodes.UNAUTHORIZED)
+        success: false,
+        error: getReasonPhrase(StatusCodes.UNAUTHORIZED)
       })
     }
   },
@@ -29,12 +31,14 @@ const authMiddleware = {
         next();
       } else {
         res.status(StatusCodes.UNAUTHORIZED).json({
-          message: getReasonPhrase(StatusCodes.UNAUTHORIZED)
+          success: false,
+          error: getReasonPhrase(StatusCodes.UNAUTHORIZED)
         })
       }
     } else {
       res.status(StatusCodes.UNAUTHORIZED).json({
-        message: getReasonPhrase(StatusCodes.UNAUTHORIZED)
+        success: false,
+        error: getReasonPhrase(StatusCodes.UNAUTHORIZED)
       })
     }
   }
