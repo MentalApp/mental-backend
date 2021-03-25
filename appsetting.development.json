@@ -8,8 +8,9 @@
     "expires": 50000000000
   },
   "authKey": "accesstoken",
-  "rabbitMQConfig":{
-    "url":"localhost",
-    "port":"8866"
+  "rabbitMQConfig": {
+    "url": "amqp://localhost",
+    "port": 8866,
+    "maxListener": 32
   }
 }

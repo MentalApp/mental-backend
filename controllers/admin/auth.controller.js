@@ -25,29 +25,6 @@ const authController = {
       }
     }
 
-    // try {
-    //   if (req.body && req.body.email && req.body.password) {
-    //     const token = jwt.sign({
-    //       user: req.body.email,
-    //       password: req.body.password
-    //     }, appSetting.jwtConfig.secretKey);
-
-    //     res.cookie(token, {
-    //       httpOnly: true,
-    //       expires: appSetting.cookieConfig.expires,
-    //       signed: true
-    //     });
-    //     res.status(200).json({
-    //       message: "Successed"
-    //     });
-    //   } else {
-    //     throw ("Argument not correct");
-    //   }
-    // } catch (error) {
-    //   res.status(400).json({
-    //     message: error.message
-    //   });
-    // }
   },
 
   logout: async (req, res) => {

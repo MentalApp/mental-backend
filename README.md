@@ -44,6 +44,11 @@ Follow these instructions to set up this project on local machine.
   ```
   sequelize-cli db:create db:migrate db:seed:all
   ```
+  
+- Run Rabbit MQ
+  ```
+  docker run -it --rm --name rabbitmq -p 5672:5672 -p 15672:15672 rabbitmq:3-management
+  ```
 
 - Run project
   ```

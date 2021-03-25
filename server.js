@@ -1,5 +1,7 @@
+
 const express = require('express');
 const env = require('dotenv');
+const consumerInit = require('./worker/consumer');
 env.config();
 
 const app = express();
@@ -22,5 +24,10 @@ require("./routers/guest/officer_test.routes")(app);
 require("./routers/guest/test.routes")(app);
 
 app.listen(PORT, (res) => {
+    
     console.log(`App listening on port ${PORT}`);
 })
+
+const initWorkerService = async () => await consumerInit();
+
+initWorkerService();
