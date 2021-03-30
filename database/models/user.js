@@ -22,7 +22,7 @@ module.exports = (sequelize, DataTypes) => {
     type: DataTypes.STRING,
     role: DataTypes.INTEGER,
     joinArmy: DataTypes.DATE,
-    unit: DataTypes.STRING,
+    unit: DataTypes.INTEGER,
     rank: DataTypes.STRING,
     position: DataTypes.STRING
   }, {
