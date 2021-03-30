@@ -4,11 +4,7 @@ const officerTestSerializer = require("../../serializers/officer_test.serializer
 const OfficerTest = db.OfficerTest;
 
 const officerTestController = {
-<<<<<<< HEAD
-  findAllTest: async (req, res) => {
-=======
   findAll: async (req, res) => {
->>>>>>> 792ad16e8ac18352e802b29ad2b4cfe7fa7cea8a
     const unit = req.query.unit;
     var condition = unit ? { unit: { [Op.like]: `%${unit}%` } } : null;
 
