@@ -14,7 +14,7 @@ module.exports = (sequelize, DataTypes) => {
     }
   };
   OfficerTest.init({
-    question: DataTypes.STRING,
+    question: DataTypes.TEXT,
     name: DataTypes.STRING,
     dateOfBirth: DataTypes.DATE,
     gender: DataTypes.INTEGER,

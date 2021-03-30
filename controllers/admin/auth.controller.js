@@ -9,10 +9,16 @@ const authController = {
   login: async (req, res) => {
     user = await User.findOne({ where: { email: req.body.email } })
     if (!user) {
-      res.status(404).json({ message: 'Authentication failed. User not found.' });
+      res.status(404).json({
+        success: false,
+        error: 'Authentication failed. User not found.'
+      });
     } else if (user) {
       if (!bcrypt.compareSync(req.body.password, user.password)) {
-        res.status(401).json({ message: 'Authentication failed. Wrong password.' });
+        res.status(401).json({
+          success: false,
+          error: 'Authentication failed. Wrong password.'
+        });
       } else {
         token = jwt.sign({ 
           email: user.email, 
@@ -21,7 +27,10 @@ const authController = {
           role: "admin"
         }, appSetting.jwtConfig.secretKey)
 
-        return res.json({ token: token });
+        return res.json({
+          success: true,
+          token: token
+        });
       }
     }
 

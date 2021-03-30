@@ -1,8 +1,7 @@
 const db = require("../../database/models");
+const officerTestSerializer = require("../../serializers/officer_test.serializer")
+
 const OfficerTest = db.OfficerTest;
-const appConfig = require('../../appconfig/app.config');
-const consumerConfig = require('../../worker/consumer.config.json');
-// const Op = db.Sequelize.Op;
 
 const officerTestController = {
   create: async (req, res) => {
@@ -10,28 +9,19 @@ const officerTestController = {
     const chanel = await publisherHelper.createChannel()
     const consumer = consumerConfig.consumers.find(x => x.jobTitle === "saveAnswner");
 
-    const queueName = consumer.jobQueue;
-    chanel.assertQueue(queueName);
-    chanel.sendToQueue(queueName, Buffer.from(JSON.stringify(req.body.answer)));
-    setTimeout(() => {
-      chanel.close();
-    },500)
-    res.json({
-      message: JSON.stringify(req.body.answer)
-    })
-    // const officerTest = req.body;
-    // officerTest.answer = JSON.stringify(req.body.answer);
-    // OfficerTest.create(officerTest)
-    //   .then(data => {
-    //     data.answer = JSON.parse(data.answer)
-    //     res.send(data);
-    //   })
-    //   .catch(err => {
-    //     res.status(500).send({
-    //       message:
-    //         err.message || "Some error occurred while creating the User."
-    //     });
-    //   });
+    OfficerTest.create(officerTest)
+      .then(data => {
+        res.json({
+          success: true,
+          data: officerTestSerializer.new(data)
+        });
+      })
+      .catch(err => {
+        res.status(500).json({
+          success: false,
+          error: err.message || "Some error occurred while creating the User."
+        });
+      });
   }
 }
 
