@@ -26,16 +26,12 @@
     "define": { "charset": "utf8", "dialectOptions": { "collate": "utf8_general_ci" } }
   },
   "production": {
-    "username": "root",
-    "password": null,
-    "database": "mental_production",
-    "host": "127.0.0.1",
-    "dialect": "mariadb",
-    "pool": {
-      "min": 0,
-      "max": 5,
-      "idle": 10000
-    },
-    "define": { "charset": "utf8", "dialectOptions": { "collate": "utf8_general_ci" } }
+    "use_env_variable": "DATABASE_URL",
+    "dialectOptions": {
+      "ssl": {
+        "require": true,
+        "rejectUnauthorized": false
+      }
+    }
   }
 }
