@@ -17,7 +17,10 @@ const authController = {
         role: "guest"
       }, appSetting.jwtConfig.secretKey)
 
-      return res.json({ token: token });
+      return res.json({ 
+        success: true,
+        token: token 
+      });
     }
   }
 }
