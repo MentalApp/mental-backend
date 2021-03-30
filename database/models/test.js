@@ -17,8 +17,11 @@ module.exports = (sequelize, DataTypes) => {
     index: DataTypes.INTEGER,
     testVersionId: DataTypes.STRING,
     questionIds: DataTypes.TEXT,
+    description: DataTypes.TEXT,
     code: DataTypes.STRING,
-    liePercent: DataTypes.DOUBLE
+    name: DataTypes.STRING,
+    timer: DataTypes.STRING,
+    isClose: DataTypes.BOOLEAN
   }, {
     sequelize,
     charset: 'utf8',

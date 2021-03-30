@@ -17,12 +17,21 @@ module.exports = {
       questionIds: {
         type: Sequelize.TEXT
       },
+      description: {
+        type: Sequelize.TEXT
+      },
       code: {
         unique: true,
         type: Sequelize.STRING
       },
-      liePercent: {
-        type: Sequelize.DOUBLE
+      name: {
+        type: Sequelize.STRING
+      },
+      timer: {
+        type: Sequelize.STRING
+      },
+      isClose: {
+        type: Sequelize.BOOLEAN
       },
       createdAt: {
         allowNull: false,

@@ -35,7 +35,7 @@ module.exports = {
         type: Sequelize.DATE
       },
       unit: {
-        type: Sequelize.STRING
+        type: Sequelize.INTEGER
       },
       rank: {
         type: Sequelize.STRING
