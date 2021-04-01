@@ -9,7 +9,7 @@ module.exports = app => {
   router.delete("/test_pools/:id", tests.deleteTestPool);
 
   router.post("/", tests.createTest);
-  router.post("/", tests.findAllTest);
+  router.get("/", tests.findAllTest);
   router.get("/:id", tests.findOneTest);
   router.put("/:id", tests.updateTest);
   router.delete("/:id", tests.deleteTest);
