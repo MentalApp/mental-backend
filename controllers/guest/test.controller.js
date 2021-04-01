@@ -13,9 +13,9 @@ const testController = {
       questionIds = !!test.questionIds ? JSON.parse(test.questionIds) : [];
     }
     else {
-      res.status(404).send({
-        message:
-          "Test not found"
+      res.status(404).json({
+        success: false,
+        error: "Test not found"
       });
     }
     var condition = { id: { [Op.in]: questionIds } };
