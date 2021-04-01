@@ -1,5 +1,5 @@
 'use strict';
-const moment = require('moment');
+const dateHelper = require('../../helpers/date.helper');
 const {
   Model
 } = require('sequelize');
@@ -60,7 +60,8 @@ module.exports = (sequelize, DataTypes) => {
     }
   });
   OfficerTest.addHook('beforeSave', async (instance, options) => {
-
+    instance.dateOfBirth = dateHelper.formatDateStringToObject(instance.dateOfBirth);
+    instance.joinArmy = dateHelper.formatMonth(instance.joinArmy);
   })
 
   return OfficerTest;

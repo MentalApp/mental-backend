@@ -9,9 +9,7 @@ const officerTestController = {
     // const chanel = await publisherHelper.createChannel()
     // const consumer = consumerConfig.consumers.find(x => x.jobTitle === "saveAnswner");
     const officerTest = req.body
-    officerTest.answer = JSON.stringify(officerTest.answer)
-    officerTest.dateOfBirth = new Date(officerTest.dateOfBirth)
-    officerTest.joinArmy = new Date(officerTest.joinArmy)
+    officerTest.answer = JSON.stringify(officerTest.answer);
 
     OfficerTest.create(officerTest)
       .then(data => {

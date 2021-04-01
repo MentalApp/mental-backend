@@ -30,5 +30,8 @@ module.exports = (sequelize, DataTypes) => {
     charset: 'utf8',
     modelName: 'User',
   });
+  User.addHook('beforeSave', async (instance, options) => {
+    instance.joinArmy = dateHelper.formatMonth(instance.joinArmy);
+  })
   return User;
 };
