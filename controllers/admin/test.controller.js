@@ -3,6 +3,7 @@ const testSerializer = require("../../serializers/test.serializer")
 const testPoolSerializer = require("../../serializers/test_pool.serializer")
 const memoryCache = require('memory-cache');
 const appconfig = require('../../appconfig/app.config');
+const resultUtil = require('../../servicehelper/service.result');
 
 const Test = db.Test;
 const TestPool = db.TestPool;
@@ -178,12 +179,12 @@ const testController = {
   },
 
   startTest: async (req, res) => {
-    let serviceResult = { code: 200, data: null, message: "" }
+    let serviceResult = resultUtil.new();
     try {
       if (req.body.id) {
         const id = req.body.id;
         const test = await Test.findByPk(id);
-        if (test) {
+        if (test && !test.isClose) {
           const joinTestCode = Math.floor(100000 + Math.random() * 900000).toString();
           const joinInKey = appconfig.cacheKey.joinIn + joinTestCode.toString();
           const coefficientMsToMinute = 60000;
@@ -199,6 +200,9 @@ const testController = {
 
           test.update({ isClose: false });
           serviceResult.data = testWithEntryCode;
+        } else {
+          serviceResult.error = "Test was started";
+          res.status(400);
         }
       } else {
         throw new Error("argument incorrect");
