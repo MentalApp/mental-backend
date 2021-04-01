@@ -4,38 +4,53 @@ const { StatusCodes, getReasonPhrase } = require('http-status-codes');
 
 const authMiddleware = {
   authGuest: async (req, res, next) => {
-    if (req.headers[appSetting.authKey]) {
-      const token = req.headers[appSetting.authKey];
-      const decode = jwt.verify(token, appSetting.jwtConfig.secretKey)
-      console.log(decode)
-      if (!!decode && decode.role == "guest") {
-        next();
+    try {
+      if (req.headers[appSetting.authKey]) {
+        const token = req.headers[appSetting.authKey];
+        const decode = jwt.verify(token, appSetting.jwtConfig.guestSecretKey)
+        if (!!decode) {
+          next();
+        } else {
+          res.status(StatusCodes.UNAUTHORIZED).json({
+            success: false,
+            error: getReasonPhrase(StatusCodes.UNAUTHORIZED)
+          })
+        }
       } else {
         res.status(StatusCodes.UNAUTHORIZED).json({
           success: false,
           error: getReasonPhrase(StatusCodes.UNAUTHORIZED)
         })
       }
-    } else {
+    } catch (error) {
+      console.log(error.message);
       res.status(StatusCodes.UNAUTHORIZED).json({
         success: false,
         error: getReasonPhrase(StatusCodes.UNAUTHORIZED)
-      })
+      });
     }
   },
   authAdmin: async (req, res, next) => {
-    if (req.headers[appSetting.authKey]) {
-      const token = req.headers[appSetting.authKey];
-      const decode = jwt.verify(token, appSetting.jwtConfig.secretKey)
-      if (!!decode && decode.role == "admin") {
-        next();
+    try {
+      if (req.headers[appSetting.authKey]) {
+        const token = req.headers[appSetting.authKey];
+        const decode = jwt.verify(token, appSetting.jwtConfig.secretKey)
+        if (!!decode) {
+          next();
+        } else {
+          res.status(StatusCodes.UNAUTHORIZED).json({
+            success: false,
+            error: getReasonPhrase(StatusCodes.UNAUTHORIZED)
+          })
+        }
       } else {
         res.status(StatusCodes.UNAUTHORIZED).json({
           success: false,
           error: getReasonPhrase(StatusCodes.UNAUTHORIZED)
         })
       }
-    } else {
+    } catch (error) {
+      console.log(error.message);
       res.status(StatusCodes.UNAUTHORIZED).json({
         success: false,
         error: getReasonPhrase(StatusCodes.UNAUTHORIZED)

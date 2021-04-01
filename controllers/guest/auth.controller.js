@@ -16,9 +16,8 @@ const authController = {
         const id = testWithEntryCode.id;
         const test = await Test.findByPk(id);
         if (test && !test.isClose) {
-          const token = jwt.sign(Object.assign({ role: "Guest" }, test.dataValues), appSetting.jwtConfig.secretKey);
+          const token = jwt.sign((test.dataValues), appSetting.jwtConfig.guestSecretKey);
           serviceResult.token = token;
-          serviceResult.data = test.dataValues;
           serviceResult.success = true;
         } else {
           serviceResult.error = "Test invalid";
