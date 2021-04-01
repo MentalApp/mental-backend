@@ -15,7 +15,8 @@ module.exports = {
         type: Sequelize.STRING
       },
       dateOfBirth: {
-        type: Sequelize.DATE
+        type: Sequelize.DATE,
+        isDate: true,
       },
       gender: {
         type: Sequelize.INTEGER
@@ -36,7 +37,8 @@ module.exports = {
         type: Sequelize.STRING
       },
       answer: {
-        type: Sequelize.TEXT
+        type: Sequelize.TEXT,
+
       },
       isLieConfirm: {
         type: Sequelize.BOOLEAN
@@ -66,11 +68,17 @@ module.exports = {
       updatedAt: {
         allowNull: false,
         type: Sequelize.DATE
+      },
+      militaryCode: {
+        allowNull: false,
+        type: Sequelize.STRING,
+        length: 20,
+
       }
     },
-    {
-      charset: 'utf8'
-    });
+      {
+        charset: 'utf8'
+      });
   },
   down: async (queryInterface, Sequelize) => {
     await queryInterface.dropTable('OfficerTests');

@@ -1,4 +1,5 @@
 'use strict';
+const moment = require('moment');
 const {
   Model
 } = require('sequelize');
@@ -30,11 +31,39 @@ module.exports = (sequelize, DataTypes) => {
     testVersion: DataTypes.STRING,
     userConfirmId: DataTypes.STRING,
     otherSymptom: DataTypes.TEXT,
-    otherPeople: DataTypes.TEXT
+    otherPeople: DataTypes.TEXT,
+    militaryCode: DataTypes.STRING
   }, {
     sequelize,
     charset: 'utf8',
-    modelName: 'OfficerTest'
+    modelName: 'OfficerTest',
+    validate: {
+      requireOptions() {
+        const me = this;
+        if (!me.militaryCode) {
+          throw new Error("militaryCode is require");
+        }
+        if (!me.answer) {
+          throw new Error("answer is require");
+        } else {
+          const parseAnswer = JSON.parse(me.answer);
+          if (!Array.isArray(parseAnswer)) {
+            throw new Error("answer must be json string array");
+          }
+        }
+
+        if (!me.unit) {
+          throw new Error("unit is require");
+        }
+
+      }
+    }
   });
+  OfficerTest.addHook('beforeSave', async (instance, options) => {
+
+  })
+
   return OfficerTest;
 };
+
+

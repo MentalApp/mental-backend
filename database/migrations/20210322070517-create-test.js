@@ -28,7 +28,7 @@ module.exports = {
         type: Sequelize.STRING
       },
       timer: {
-        type: Sequelize.STRING
+        type: Sequelize.INTEGER
       },
       isClose: {
         type: Sequelize.BOOLEAN

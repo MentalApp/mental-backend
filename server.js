@@ -1,7 +1,7 @@
 
 const express = require('express');
 const env = require('dotenv');
-const consumerInit = require('./worker/consumer');
+// const consumerInit = require('./worker/consumer');
 const cors = require('cors');
 env.config();
 
@@ -38,6 +38,6 @@ app.listen(PORT, (res) => {
     console.log(`App listening on port ${PORT}`);
 })
 
-const initWorkerService = async () => await consumerInit();
+// const initWorkerService = async () => await consumerInit();
 
-initWorkerService();
+// initWorkerService();
