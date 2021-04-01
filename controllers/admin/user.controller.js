@@ -1,4 +1,3 @@
-const bcrypt = require("bcrypt-nodejs");
 const db = require("../../database/models");
 const userSerializer = require("../../serializers/user.serializer")
 
@@ -8,7 +7,6 @@ const Op = db.Sequelize.Op;
 const userController = {
   create: async (req, res) => {
     const user = req.body;
-    user.password = bcrypt.hashSync(user.password, bcrypt.genSaltSync(8), null)
 
     User.create(user)
       .then(data => {

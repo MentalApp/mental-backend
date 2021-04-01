@@ -1,5 +1,6 @@
 const db = require("../../database/models");
-const officerTestSerializer = require("../../serializers/officer_test.serializer")
+const officerTestSerializer = require("../../serializers/officer_test.serializer");
+const moment = require('moment');
 
 const OfficerTest = db.OfficerTest;
 
@@ -9,7 +10,6 @@ const officerTestController = {
     // const chanel = await publisherHelper.createChannel()
     // const consumer = consumerConfig.consumers.find(x => x.jobTitle === "saveAnswner");
     const officerTest = req.body
-    officerTest.answer = JSON.stringify(officerTest.answer);
 
     OfficerTest.create(officerTest)
       .then(data => {

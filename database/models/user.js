@@ -1,4 +1,6 @@
 'use strict';
+const bcrypt = require("bcrypt-nodejs");
+const dateHelper = require('../../helpers/date.helper');
 const {
   Model
 } = require('sequelize');
@@ -30,8 +32,10 @@ module.exports = (sequelize, DataTypes) => {
     charset: 'utf8',
     modelName: 'User',
   });
-  User.addHook('beforeSave', async (instance, options) => {
+  User.beforeSave(async (instance, options) => {
     instance.joinArmy = dateHelper.formatMonth(instance.joinArmy);
+    instance.password = bcrypt.hashSync(instance.password, bcrypt.genSaltSync(8), null)
   })
+
   return User;
 };

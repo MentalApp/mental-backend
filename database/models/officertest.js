@@ -1,5 +1,7 @@
 'use strict';
 const dateHelper = require('../../helpers/date.helper');
+const filterService = require("../../services/filter.service")
+const moment = require('moment');
 const {
   Model
 } = require('sequelize');
@@ -59,11 +61,18 @@ module.exports = (sequelize, DataTypes) => {
       }
     }
   });
-  OfficerTest.addHook('beforeSave', async (instance, options) => {
+  OfficerTest.beforeSave(beforeSave, async (instance, options) => {
+    const shallowFilter = await filterService.shallowFilter(instance);
+    const deepFilter = await filterService.deepFilter(instance);
     instance.dateOfBirth = dateHelper.formatDateStringToObject(instance.dateOfBirth);
     instance.joinArmy = dateHelper.formatMonth(instance.joinArmy);
+    instance.predictShallowFilter = shallowFilter;
+    instance.predictDeepFilter = deepFilter;
+    if ( typeof instance.answer !== "string") {
+      instance.answer = JSON.stringify(instance.answer)
+    }
   })
-
+  
   return OfficerTest;
 };
 
