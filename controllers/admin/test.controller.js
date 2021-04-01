@@ -176,7 +176,7 @@ const testController = {
         });
       });
   },
-  
+
   startTest: async (req, res) => {
     let serviceResult = { code: 200, data: null, message: "" }
     try {
@@ -200,7 +200,6 @@ const testController = {
           test.update({ isClose: false });
           serviceResult.data = testWithEntryCode;
         }
-
       } else {
         throw new Error("argument incorrect");
       }
