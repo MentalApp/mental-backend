@@ -12,5 +12,8 @@
     "url": "amqp://localhost",
     "port": 8866,
     "maxListener": 32
+  },
+  "cacheKey":{
+    "joinIn":"guestJoinIn_"
   }
 }

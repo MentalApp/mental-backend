@@ -20,12 +20,22 @@ module.exports = (sequelize, DataTypes) => {
     description: DataTypes.TEXT,
     code: DataTypes.STRING,
     name: DataTypes.STRING,
-    timer: DataTypes.STRING,
+    timer: DataTypes.INTEGER,
     isClose: DataTypes.BOOLEAN
   }, {
     sequelize,
     charset: 'utf8',
     modelName: 'Test',
+    validate: {
+      requireOption() {
+        const me = this;
+        if (!me.code) {
+          throw new Error("code is require");
+        }
+
+
+      }
+    }
   });
   return Test;
 };

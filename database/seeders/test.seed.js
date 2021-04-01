@@ -13,7 +13,7 @@ module.exports = {
           description: "Đợt khảo sát lần 1",
           code: "khaosatlan1",
           name: "Khảo sát lần 1",
-          timer: "3600",
+          timer: 90,
           isClose: false,
           createdAt: new Date(),
           updatedAt: new Date

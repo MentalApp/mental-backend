@@ -11,5 +11,8 @@
   "rabbitMQConfig":{
     "url":"localhost",
     "port":"8866"
+  },
+  "cacheKey":{
+    "joinIn":"guestJoinIn_"
   }
 }

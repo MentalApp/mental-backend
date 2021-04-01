@@ -1,6 +1,8 @@
 const db = require("../../database/models");
 const testSerializer = require("../../serializers/test.serializer")
 const testPoolSerializer = require("../../serializers/test_pool.serializer")
+const memoryCache = require('memory-cache');
+const appconfig = require('../../appconfig/app.config');
 
 const Test = db.Test;
 const TestPool = db.TestPool;
@@ -173,6 +175,41 @@ const testController = {
           error: err.message || "Could not delete Test with id=" + id
         });
       });
+  },
+  
+  startTest: async (req, res) => {
+    let serviceResult = { code: 200, data: null, message: "" }
+    try {
+      if (req.body.id) {
+        const id = req.body.id;
+        const test = await Test.findByPk(id);
+        if (test) {
+          const joinTestCode = Math.floor(100000 + Math.random() * 900000).toString();
+          const joinInKey = appconfig.cacheKey.joinIn + joinTestCode.toString();
+          const coefficientMsToMinute = 60000;
+          const testValue = test.dataValues;
+          const timer = test.timer || 90;
+          const testWithEntryCode = Object.assign({
+            entryCode: joinTestCode
+          }, testValue);
+          //time is ms
+          memoryCache.put(joinInKey, testWithEntryCode, coefficientMsToMinute * timer, (key, value) => {
+            test.update({ isClose: true });
+          });
+
+          test.update({ isClose: false });
+          serviceResult.data = testWithEntryCode;
+        }
+
+      } else {
+        throw new Error("argument incorrect");
+      }
+    } catch (error) {
+      serviceResult.code = 500;
+      serviceResult.message = error.message;
+    } finally {
+      res.json(serviceResult);
+    }
   }
 }
 
