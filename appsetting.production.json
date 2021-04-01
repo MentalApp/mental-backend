@@ -1,6 +1,7 @@
 {
   "jwtConfig": {
     "secretKey": "kjdsadjskadjkasdjksadjkajdajkdlkgjfdhjfjk",
+    "guestSecretKey":"dklsakldsajkghjfhhjhjhjdhjsdsddasda",
     "expire": 30,
     "payload": "dsadasd"
   },

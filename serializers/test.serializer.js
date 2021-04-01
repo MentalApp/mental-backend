@@ -5,7 +5,7 @@ const testSerializer = {
     return ({
       id:             test.id,
       testVersionId:  test.testVersionId,
-      questions:      questions?.map(question => testPoolSerializer.new(question)) || JSON.parse(test.questionIds),
+      questions:      questions.map(question => testPoolSerializer.new(question)) || JSON.parse(test.questionIds),
       code:           test.code
     })
   }

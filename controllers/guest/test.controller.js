@@ -1,5 +1,10 @@
 const db = require("../../database/models");
-const testSerializer = require("../../serializers/test.serializer")
+const serviceUtil = require('../../servicehelper/service.result');
+const exceptionUtil = require('../../handler_error/exceptionUtil');
+const testSerializer = require("../../serializers/test.serializer");
+const appSetting = require('../../appconfig/app.config');
+const jwt = require('jsonwebtoken');
+
 
 const TestPool = db.TestPool;
 const Test = db.Test;
@@ -7,32 +12,33 @@ const Op = db.Sequelize.Op;
 
 const testController = {
   findAllTestPool: async (req, res) => {
-    const code = req.query.code
-    const test = await Test.findOne({ where: { code: { [Op.eq]: code } } })
-    if(!!test) {
-      questionIds = !!test.questionIds ? JSON.parse(test.questionIds) : [];
-    }
-    else {
-      res.status(404).json({
-        success: false,
-        error: "Test not found"
-      });
-    }
-    var condition = { id: { [Op.in]: questionIds } };
+    let serviceResult = serviceUtil.new();
+    try {
+      const token = req.headers[appSetting.authKey];
+      const decode = jwt.verify(token, appSetting.jwtConfig.guestSecretKey);
+      const id = decode.id
+      const test = await Test.findByPk(id);
+      if (test) {
+        questionIds = !!test.questionIds ? JSON.parse(test.questionIds) : [];
+      }
+      else {
+        serviceResult.success = false;
+        serviceResult.message = "Test not found";
+        res.status(404)
+      }
+      var condition = { id: { [Op.in]: questionIds } };
 
-    TestPool.findAll({ where: condition })
-      .then(data => {
-        res.json({
-          success: true,
-          data: testSerializer.new(test, data)
-        });
-      })
-      .catch(err => {
-        res.status(500).json({
-          success: false,
-          error: err.message || "Some error occurred while retrieving test."
-        });
-      });
+      const data = await TestPool.findAll({ where: condition });
+
+      if (data) {
+        serviceResult.data = testSerializer.new(test, data);
+        serviceResult.success = true;
+      }
+    } catch (error) {
+      exceptionUtil.handlerErrorAPI(res, serviceResult, error);
+    } finally {
+      res.json(serviceResult);
+    }
   }
 }
 

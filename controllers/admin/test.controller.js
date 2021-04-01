@@ -184,26 +184,37 @@ const testController = {
       if (req.body.id) {
         const id = req.body.id;
         const test = await Test.findByPk(id);
-        if (test && !test.isClose) {
-          const joinTestCode = Math.floor(100000 + Math.random() * 900000).toString();
-          const joinInKey = appconfig.cacheKey.joinIn + joinTestCode.toString();
-          const coefficientMsToMinute = 60000;
-          const testValue = test.dataValues;
-          const timer = test.timer || 90;
-          const testWithEntryCode = Object.assign({
-            entryCode: joinTestCode
-          }, testValue);
-          //time is ms
-          memoryCache.put(joinInKey, testWithEntryCode, coefficientMsToMinute * timer, (key, value) => {
-            test.update({ isClose: true });
-          });
+        if (test && test.isClose) {
+          const startedTests = await Test.findAll({ where: { isClose: false } });
+          if (startedTests.length < 20) {
+            const joinTestCode = Math.floor(100000 + Math.random() * 900000).toString();
+            console.log(joinTestCode);
+            const joinInKey = appconfig.cacheKey.joinIn + joinTestCode.toString();
+            const coefficientMsToMinute = 60000;
+            const testValue = test.dataValues;
+            const timer = test.timer || 90;
+            const testWithEntryCode = Object.assign({
+              entryCode: joinTestCode
+            }, testValue);
+            const timeStart = new Date().getTime();
+            //time is ms
+            memoryCache.put(joinInKey, testWithEntryCode, coefficientMsToMinute * timer, (key, value) => {
+              test.update({ isClose: true });
+              console.log(key + `: ${timeStart} - ${new Date.getTime()}`);
+            });
 
-          test.update({ isClose: false });
-          serviceResult.data = testWithEntryCode;
-        } else {
+            test.update({ isClose: false });
+            serviceResult.data = testWithEntryCode;
+            serviceResult.success = true;
+          } else {
+            throw new Error("Too many started test");
+          }
+        }
+        else {
           serviceResult.error = "Test was started";
           res.status(400);
         }
+
       } else {
         throw new Error("argument incorrect");
       }
