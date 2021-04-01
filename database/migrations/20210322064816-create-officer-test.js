@@ -15,8 +15,7 @@ module.exports = {
         type: Sequelize.STRING
       },
       dateOfBirth: {
-        type: Sequelize.DATE,
-        isDate: true,
+        type: Sequelize.DATE
       },
       gender: {
         type: Sequelize.INTEGER
@@ -40,11 +39,11 @@ module.exports = {
         type: Sequelize.TEXT,
 
       },
-      isLieConfirm: {
-        type: Sequelize.BOOLEAN
+      predictShallowFilter: {
+        type: Sequelize.INTEGER
       },
-      liePredictPercent: {
-        type: Sequelize.DOUBLE
+      predictDeepFilter: {
+        type: Sequelize.INTEGER
       },
       testTime: {
         type: Sequelize.INTEGER
@@ -73,7 +72,6 @@ module.exports = {
         allowNull: false,
         type: Sequelize.STRING,
         length: 20,
-
       }
     },
       {

@@ -7,8 +7,9 @@ const Op = db.Sequelize.Op;
 const officerTestController = {
   findAll: async (req, res) => {
     const unit = req.query.unit;
-    const code = req.query.code;
-    const keyword = req.query.keyword
+    const keyword = req.query.keyword;
+    const predictShallowFilter = req.query.predictShallowFilter
+    const predictDeepFilter = req.query.predictDeepFilter
     var condition = {
       [Op.or]: [
         { 
@@ -17,7 +18,8 @@ const officerTestController = {
         }
       ],
       unit: unit ? { [Op.substring]: unit } : null,
-      code: code ? { [Op.substring]: code } : null
+      predictShallowFilter: predictShallowFilter ? { predictShallowFilter: predictShallowFilter } : null,
+      predictDeepFilter: predictDeepFilter ? { predictDeepFilter: predictDeepFilter } : null
     }
 
     OfficerTest.findAll({ where: condition })
