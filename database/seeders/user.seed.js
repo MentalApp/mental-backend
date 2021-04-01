@@ -14,7 +14,7 @@ module.exports = {
           password: bcrypt.hashSync("123456", bcrypt.genSaltSync(8), null),
           role: 1,
           joinArmy: new Date('2020-06-01T00:00:00.000Z'),
-          unit: "b2b3",
+          unit: 1,
           rank: "b2",
           position: "",
           createdAt: new Date(),

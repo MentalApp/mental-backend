@@ -14,7 +14,9 @@ module.exports = {
           code: "khaosatlan1",
           name: "Khảo sát lần 1",
           timer: "3600",
-          isClose: false
+          isClose: false,
+          createdAt: new Date(),
+          updatedAt: new Date
         },
       ], {})
   },
