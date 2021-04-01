@@ -2,17 +2,29 @@ const db = require("../../database/models");
 const officerTestSerializer = require("../../serializers/officer_test.serializer")
 
 const OfficerTest = db.OfficerTest;
+const Op = db.Sequelize.Op;
 
 const officerTestController = {
   findAll: async (req, res) => {
     const unit = req.query.unit;
-    var condition = unit ? { unit: { [Op.like]: `%${unit}%` } } : null;
+    const code = req.query.code;
+    const keyword = req.query.keyword
+    var condition = {
+      [Op.or]: [
+        { 
+          name: keyword ? { [Op.substring]: keyword } : null,
+          militaryCode: keyword ? { [Op.substring]: keyword } : null
+        }
+      ],
+      unit: unit ? { [Op.substring]: unit } : null,
+      code: code ? { [Op.substring]: code } : null
+    }
 
     OfficerTest.findAll({ where: condition })
       .then(data => {
         res.json({
           success: true,
-          data: data.map(item => testSerializer.new(item))
+          data: data.map(item => officerTestSerializer.new(item))
         });
       })
       .catch(err => {

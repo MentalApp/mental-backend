@@ -8,13 +8,20 @@ env.config();
 const app = express();
 const PORT = process.env.PORT || 8080;
 
-app.use(cors())
+const corsOptions = {
+  origin: true,
+  methods: ['GET', 'HEAD', 'PUT', 'PATCH', 'POST', 'DELETE'],
+  preflightContinue: false,
+  optionsSuccessStatus: 204
+}
+
+app.use(cors(corsOptions))
 app.use(express.json());
 
 app.get('/', (req, res) => {
-    res.json({
-        message: "Connected"
-    })
+  res.json({
+      message: "Connected"
+  })
 });
 
 require('./routers/admin/auth.routes')(app);
