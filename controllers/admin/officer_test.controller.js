@@ -2,6 +2,7 @@ const db = require("../../database/models");
 const officerTestSerializer = require("../../serializers/officer_test.serializer")
 
 const OfficerTest = db.OfficerTest;
+const Op = db.Sequelize.Op;
 
 const officerTestController = {
   findAll: async (req, res) => {
