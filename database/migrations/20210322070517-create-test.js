@@ -15,12 +15,14 @@ module.exports = {
         type: Sequelize.STRING
       },
       questionIds: {
+        allowNull: false,
         type: Sequelize.TEXT
       },
       description: {
         type: Sequelize.TEXT
       },
       code: {
+        allowNull: false,
         unique: true,
         type: Sequelize.STRING
       },
@@ -28,9 +30,12 @@ module.exports = {
         type: Sequelize.STRING
       },
       timer: {
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        defaultValue: 90
       },
       isClose: {
+        defaultValue: true,
         type: Sequelize.BOOLEAN
       },
       createdAt: {
