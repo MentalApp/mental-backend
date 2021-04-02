@@ -19,27 +19,22 @@ const filterService = {
   deepFilter: async (officerTest) => {
     const answer = officerTest.answer;
     let result = 0;
-    let predict
     if (answer[14].answer == "Không") {
       if (answer[16].answer == "Không") {
         if (answer[17] == "Không") {
           predict = 0
         } else {
-          predict = answer[18].answer == "Có" ? 1 : 0
+          result = answer[18].answer == "Có" ? 1 : 0
         }
       } else {
-        predict = answer[2].answer == "Có" ? 1 : 0
+        result = answer[2].answer == "Có" ? 1 : 0
       }
     } else {
       if (answer[23].answer == "Không") {
-        predict = answer[10].answer == "Có" ? 1 : 0
+        result = answer[10].answer == "Có" ? 1 : 0
       } else {
-        predict = 1
+        result = 1
       }
-    }
-
-    if (predict != (answer[26].answer == "Có" ? 1 : 0)) {
-      result = 1
     }
 
     return result;
