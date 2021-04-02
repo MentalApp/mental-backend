@@ -6,5 +6,5 @@ module.exports = app => {
 
   router.post("/", officerTests.create);
 
-  app.use('/api/guest/officer_tests',authMiddleware.authGuest, router);
+  app.use('/api/guest/officer_tests', authMiddleware.authGuest, router);
 };

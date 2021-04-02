@@ -10,20 +10,26 @@ const officerTestController = {
     // const chanel = await publisherHelper.createChannel()
     // const consumer = consumerConfig.consumers.find(x => x.jobTitle === "saveAnswner");
     const officerTest = req.body
-
-    OfficerTest.create(officerTest)
-      .then(data => {
+    officerTest.answer = JSON.stringify(officerTest.answer)
+    try {
+      const data = await OfficerTest.create(officerTest)
+      if (data) {
         res.json({
           success: true,
           data: officerTestSerializer.new(data)
         });
-      })
-      .catch(err => {
-        res.status(500).json({
+      } else {
+        res.status(400).json({
           success: false,
-          error: err.message || "Some error occurred while creating the Officer test."
+          error: "Some error occurred while creating the Officer test."
         });
+      }
+    } catch (error) {
+      res.status(400).json({
+        success: false,
+        error: error.message || "Some error occurred while creating the Officer test."
       });
+    }
   }
 }
 
