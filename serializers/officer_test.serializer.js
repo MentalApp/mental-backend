@@ -5,6 +5,7 @@ const officerTestSerializer = {
       name:                 officerTest.name,
       dateOfBirth:          officerTest.dateOfBirth,
       gender:               officerTest.gender,
+      militaryCode:         officerTest.militaryCode,
       nation:               officerTest.nation,
       joinArmy:             officerTest.joinArmy,
       unit:                 officerTest.unit,

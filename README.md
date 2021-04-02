@@ -54,3 +54,26 @@ Follow these instructions to set up this project on local machine.
   ```
   yarn start
   ```
+
+### Deploy
+- Install
+  ```
+  node v14.3.0
+  yarn 1.22.4
+  npx 6.14.11
+  ```
+- Setting environment
+  ```
+  cp .env.example .env
+  change DATABASE_URL with database url on production in .env file
+  ```
+- Migrate DB
+  ```
+  npx sequelize-cli db:migrate
+  npx sequelize-cli db:seed:all
+  ```
+- Run
+  ```
+  yarn
+  yarn runproduction
+  ```

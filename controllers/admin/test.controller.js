@@ -21,7 +21,7 @@ const testController = {
         });
       })
       .catch(err => {
-        res.status(500).json({
+        res.status(400).json({
           success: false,
           error: err.message || "Some error occurred while creating the Test Pool."
         });
@@ -40,7 +40,7 @@ const testController = {
         });
       })
       .catch(err => {
-        res.status(500).json({
+        res.status(400).json({
           success: false,
           error: err.message || "Some error occurred while retrieving test pool."
         });
@@ -65,7 +65,7 @@ const testController = {
         }
       })
       .catch(err => {
-        res.status(500).send({
+        res.status(400).send({
           success: false,
           error: err.message || "Could not delete Test pool with id=" + id
         });
@@ -84,7 +84,7 @@ const testController = {
         });
       })
       .catch(err => {
-        res.status(500).json({
+        res.status(400).json({
           success: false,
           error: err.message || "Some error occurred while creating the Test."
         });
@@ -103,7 +103,7 @@ const testController = {
         });
       })
       .catch(err => {
-        res.status(500).json({
+        res.status(400).json({
           success: false,
           error: err.message || "Some error occurred while retrieving tests."
         });
@@ -121,7 +121,7 @@ const testController = {
         });
       })
       .catch(err => {
-        res.status(500).json({
+        res.status(400).json({
           success: false,
           error: err.message || "Error retrieving Test with id=" + id
         });
@@ -146,7 +146,7 @@ const testController = {
         }
       })
       .catch(err => {
-        res.status(500).json({
+        res.status(400).json({
           success: false,
           error: err.message || "Error updating Test with id=" + id
         });
@@ -171,7 +171,7 @@ const testController = {
         }
       })
       .catch(err => {
-        res.status(500).send({
+        res.status(400).send({
           status: false,
           error: err.message || "Could not delete Test with id=" + id
         });

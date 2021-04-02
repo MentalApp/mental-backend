@@ -21,11 +21,11 @@ const authController = {
           serviceResult.success = true;
         } else {
           serviceResult.error = "Test invalid";
-          res.status(500);
+          res.status(404);
         }
       } else {
         serviceResult.error = "Test has expired";
-        res.status(500);
+        res.status(400);
       }
 
 

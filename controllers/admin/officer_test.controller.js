@@ -13,13 +13,10 @@ const officerTestController = {
     var condition = {
       [Op.or]: [
         { 
-          name: keyword ? { [Op.substring]: keyword } : null,
-          militaryCode: keyword ? { [Op.substring]: keyword } : null
+          name:  { [Op.like]: keyword ? `%${keyword}%` : "%%" } ,
+          militaryCode:  { [Op.like]: keyword ? `%${keyword}%`: "%%" } 
         }
-      ],
-      unit: unit ? { [Op.substring]: unit } : null,
-      predictShallowFilter: predictShallowFilter ? { predictShallowFilter: predictShallowFilter } : null,
-      predictDeepFilter: predictDeepFilter ? { predictDeepFilter: predictDeepFilter } : null
+      ]
     }
 
     OfficerTest.findAll({ where: condition })
@@ -30,7 +27,7 @@ const officerTestController = {
         });
       })
       .catch(err => {
-        res.status(500).json({
+        res.status(400).json({
           success: false,
           error: err.message || "Some error occurred while retrieving tests."
         });
@@ -48,7 +45,7 @@ const officerTestController = {
         });
       })
       .catch(err => {
-        res.status(500).json({
+        res.status(400).json({
           success: false,
           error: err.message || "Error retrieving Officer Test with id=" + id
         });

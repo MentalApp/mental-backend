@@ -79,7 +79,7 @@ const userController = {
         }
       })
       .catch(err => {
-        res.status(500).json({
+        res.status(400).json({
           success: false,
           error: err.message || "Error updating User with id=" + id
         });
@@ -104,7 +104,7 @@ const userController = {
         }
       })
       .catch(err => {
-        res.status(500).json({
+        res.status(400).json({
           success: false,
           error: err.message || "Could not delete User with id=" + id
         });
