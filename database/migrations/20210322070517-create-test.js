@@ -45,6 +45,11 @@ module.exports = {
       updatedAt: {
         allowNull: false,
         type: Sequelize.DATE
+      },
+      entryCode: {
+        allowNull: true,
+        type: Sequelize.STRING,
+        length: 20
       }
     },
     {
