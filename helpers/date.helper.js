@@ -1,6 +1,6 @@
 const moment = require('moment');
-const dateTimePattern = "dd/mm/yyyy";
-const monthPattern = "mm/yyyy";
+const dateTimePattern = "DD/MM/YYYY";
+const monthPattern = "MM/YYYY";
 module.exports = {
   formatDateStringToObject: (dateString) => {
     if (moment(dateString, dateTimePattern).isValid()) {
@@ -10,7 +10,7 @@ module.exports = {
     }
   },
   formatMonth: (dateString) => {
-    if (moment(dateString, dateTimePattern).isValid()) {
+    if (moment(dateString, monthPattern).isValid()) {
       return moment(dateString, monthPattern);
     } else {
       return null;

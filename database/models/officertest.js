@@ -15,6 +15,17 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       // define association here
     }
+
+    /**
+     * @override set value to insert in here
+     * @param {object} values original data
+     * @param {any} option option
+     */
+    _initValues(values, option) {
+      super._initValues(values, option);
+      this.dateOfBirth = dateHelper.formatDateStringToObject(values.dateOfBirth);
+      this.joinArmy = dateHelper.formatMonth(values.joinArmy);
+    }
   };
   OfficerTest.init({
     question: DataTypes.TEXT,
@@ -58,8 +69,7 @@ module.exports = (sequelize, DataTypes) => {
   OfficerTest.addHook("beforeSave", async (instance, options) => {
     const shallowFilter = await filterService.shallowFilter(instance);
     const deepFilter = await filterService.deepFilter(instance);
-    instance.dateOfBirth = dateHelper.formatDateStringToObject(instance.dateOfBirth);
-    instance.joinArmy = dateHelper.formatMonth(instance.joinArmy);
+    
     instance.predictShallowFilter = shallowFilter;
     instance.predictDeepFilter = deepFilter;
     // console.log(instance.answer)

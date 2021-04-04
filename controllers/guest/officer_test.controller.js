@@ -9,10 +9,13 @@ const officerTestController = {
     // const publisherHelper = await require('../../worker/publisher');
     // const chanel = await publisherHelper.createChannel()
     // const consumer = consumerConfig.consumers.find(x => x.jobTitle === "saveAnswner");
-    const officerTest = req.body
-    officerTest.answer = JSON.stringify(officerTest.answer)
+
     try {
-      const data = await OfficerTest.create(officerTest)
+      const officerTest = req.body;
+      officerTest.answer = JSON.stringify(officerTest.answer);
+      const builderData = OfficerTest.build(officerTest);
+      const data = await builderData.save();
+
       if (data) {
         res.json({
           success: true,
@@ -29,6 +32,8 @@ const officerTestController = {
         success: false,
         error: error.message || "Some error occurred while creating the Officer test."
       });
+    } finally {
+
     }
   }
 }
