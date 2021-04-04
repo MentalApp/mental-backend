@@ -10,7 +10,7 @@ const authController = {
     let serviceResult = { code: 200, data: null, error: "", success: false }
     try {
       const joinInCode = req.body.code;
-      const joinInKeyCache = appSetting.cacheKey.joinIn + `${joinInCode.toString()}`;
+      const joinInKeyCache = appSetting.cacheKey.joinIn + `${joinInCode}`;
       const testWithEntryCode = memoryCache.get(joinInKeyCache);
       if (testWithEntryCode && testWithEntryCode.entryCode) {
         const id = testWithEntryCode.id;

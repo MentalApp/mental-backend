@@ -15,6 +15,7 @@ module.exports = app => {
   router.delete("/:id", tests.deleteTest);
 
   router.post("/start", tests.startTest);
+  router.post("/clear", tests.clearTest);
 
   app.use('/api/admin/tests', authMiddleware.authAdmin, router);
 };

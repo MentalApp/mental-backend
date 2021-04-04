@@ -21,7 +21,8 @@ module.exports = (sequelize, DataTypes) => {
     code: DataTypes.STRING,
     name: DataTypes.STRING,
     timer: DataTypes.INTEGER,
-    isClose: DataTypes.BOOLEAN
+    isClose: DataTypes.BOOLEAN,
+    entryCode: DataTypes.STRING
   }, {
     sequelize,
     charset: 'utf8',
@@ -32,8 +33,6 @@ module.exports = (sequelize, DataTypes) => {
         if (!me.code) {
           throw new Error("code is require");
         }
-
-
       }
     }
   });

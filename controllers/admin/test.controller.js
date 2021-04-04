@@ -4,6 +4,9 @@ const testPoolSerializer = require("../../serializers/test_pool.serializer")
 const memoryCache = require('memory-cache');
 const appconfig = require('../../appconfig/app.config');
 const resultUtil = require('../../servicehelper/service.result');
+const exceptionUtil = require('../../handler_error/exceptionUtil');
+
+const httpCode = require('http-status-codes');
 
 const Test = db.Test;
 const TestPool = db.TestPool;
@@ -72,42 +75,53 @@ const testController = {
       });
   },
 
+  /**
+   * @endpoint POST("/")
+   * @param {*} req 
+   * @param {*} res 
+   */
   createTest: async (req, res) => {
-    const test = req.body;
-    test.questionIds = JSON.stringify(req.body.questionIds);
-
-    Test.create(test)
-      .then(data => {
-        res.json({
-          success: true,
-          data: testSerializer.new(data)
-        });
-      })
-      .catch(err => {
-        res.status(400).json({
-          success: false,
-          error: err.message || "Some error occurred while creating the Test."
-        });
-      });
+    const serviceResult = resultUtil.new();
+    try {
+      const test = req.body;
+      test.questionIds = JSON.stringify(req.body.questionIds);
+      const data = await Test.create(test);
+      if (data) {
+        serviceResult.success = true;
+        serviceResult.data = testSerializer.new(data);
+      } else {
+        serviceResult.success = false;
+        serviceResult.error = "Have exception when insert data";
+      }
+    } catch (error) {
+      exceptionUtil.handlerErrorAPI(res, serviceResult, error);
+    } finally {
+      res.json(serviceResult);
+    }
   },
 
+  /**
+   * @endpoint GET("/")
+   * @param {*} req 
+   * @param {*} res 
+   */
   findAllTest: async (req, res) => {
-    const testVersionId = req.query.testVersionId;
-    var condition = testVersionId ? { testVersionId: { [Op.like]: `%${testVersionId}%` } } : null;
-
-    Test.findAll({ where: condition })
-      .then(data => {
-        res.json({
-          success: true,
-          data: data.map(item => testSerializer.new(item))
-        });
-      })
-      .catch(err => {
-        res.status(400).json({
-          success: false,
-          error: err.message || "Some error occurred while retrieving tests."
-        });
-      });
+    // const codeOfTheTest = req.query.code;
+    // var condition = codeOfTheTest ? { testVersionId: { [Op.like]: `%${codeOfTheTest}%` } } : null;
+    const serviceResult = resultUtil.new();
+    try {
+      const test = req.body;
+      test.questionIds = JSON.stringify(req.body.questionIds);
+      const data = await Test.findAll();
+      if (data) {
+        serviceResult.success = true;
+        serviceResult.data = data.map(item => testSerializer.new(item));
+      }
+    } catch (error) {
+      exceptionUtil.handlerErrorAPI(res, serviceResult, error);
+    } finally {
+      res.json(serviceResult);
+    }
   },
 
   findOneTest: async (req, res) => {
@@ -178,6 +192,11 @@ const testController = {
       });
   },
 
+  /**
+   * @endpoint POST("/start")
+   * @param {*} req 
+   * @param {*} res 
+   */
   startTest: async (req, res) => {
     let serviceResult = resultUtil.new();
     try {
@@ -187,25 +206,38 @@ const testController = {
         if (test && test.isClose) {
           const startedTests = await Test.findAll({ where: { isClose: false } });
           if (startedTests.length < 20) {
-            const joinTestCode = Math.floor(100000 + Math.random() * 900000).toString();
-            console.log(joinTestCode);
-            const joinInKey = appconfig.cacheKey.joinIn + joinTestCode.toString();
-            const coefficientMsToMinute = 60000;
-            const testValue = test.dataValues;
-            const timer = test.timer || 90;
-            const testWithEntryCode = Object.assign({
-              entryCode: joinTestCode
-            }, testValue);
-            const timeStart = new Date().getTime();
-            //time is ms
-            memoryCache.put(joinInKey, testWithEntryCode, coefficientMsToMinute * timer, (key, value) => {
-              test.update({ isClose: true });
-              console.log(key + `: ${timeStart} - ${new Date.getTime()}`);
-            });
+            const entryCode = req.body.entryCode;
 
-            test.update({ isClose: false });
-            serviceResult.data = testWithEntryCode;
-            serviceResult.success = true;
+            if (entryCode) {
+              const condition = { entryCode: { [Op.eq]: `${entryCode}` } };
+              const hasDuplicateCode = await Test.findAll({ where: condition });
+              if (hasDuplicateCode.some(x => x.id !== id)) {
+                serviceResult.success = false;
+                serviceResult.error = "Duplicate entryCode";
+              }
+              else {
+                const joinInKey = appconfig.cacheKey.joinIn + entryCode.toString();
+                const coefficientMsToMinute = 60000;
+                const testValue = test.dataValues;
+                const timer = test.timer || 90;
+                const testWithEntryCode = Object.assign(testValue, {
+                  entryCode: entryCode
+                });
+                const timeStart = new Date().getTime();
+                //time is ms
+                memoryCache.put(joinInKey, testWithEntryCode, coefficientMsToMinute * timer, (key, value) => {
+                  test.update({ isClose: true });
+                  console.log(key + `: ${timeStart} - ${new Date.getTime()}`);
+                });
+
+                test.update({ isClose: false, entryCode: entryCode });
+                serviceResult.data = testWithEntryCode;
+                serviceResult.success = true;
+              }
+            } else {
+              throw new Error("Entry code is require for start test");
+            }
+
           } else {
             throw new Error("Too many started test");
           }
@@ -224,6 +256,30 @@ const testController = {
     } finally {
       res.json(serviceResult);
     }
+  },
+
+  /**
+   * @endpoint POST("/clear")
+   * @param {*} req 
+   * @param {*} res 
+   */
+  clearTest: async (req, res) => {
+    let serviceResult = resultUtil.new();
+    try {
+      memoryCache.clear();
+      const id = req.body.id;
+      if (id) {
+        const data = await Test.update({ isClose: true }, { where: { id: id }, validate: false });
+        serviceResult.data = data ? true : false;
+        serviceResult.success = true;
+      }
+
+    } catch (error) {
+      exceptionUtil.handlerErrorAPI(res, serviceResult, error);
+    } finally {
+      res.json(serviceResult);
+    }
+
   }
 }
 
