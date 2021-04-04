@@ -14,6 +14,16 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       // define association here
     }
+
+    /**
+     * @override set value to insert in here
+     * @param {object} values original data
+     * @param {any} option option
+     */
+     _initValues(values, option) {
+      super._initValues(values, option);
+      this.joinArmy = dateHelper.formatMonth(values.joinArmy);
+    }
   };
   User.init({
     fullName: DataTypes.STRING,

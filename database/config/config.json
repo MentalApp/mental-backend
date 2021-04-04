@@ -10,7 +10,13 @@
       "max": 5,
       "idle": 10000
     },
-    "define": { "charset": "utf8", "dialectOptions": { "collate": "utf8_general_ci" } }
+    "define": {
+      "charset": "utf8",
+      "dialectOptions": {
+        "collate": "utf8_general_ci"
+      }
+    },
+    "timezone":"+07:00"
   },
   "test": {
     "username": "root",
@@ -23,7 +29,13 @@
       "max": 5,
       "idle": 10000
     },
-    "define": { "charset": "utf8", "dialectOptions": { "collate": "utf8_general_ci" } }
+    "define": {
+      "charset": "utf8",
+      "dialectOptions": {
+        "collate": "utf8_general_ci"
+      }
+    },
+    "timezone":"+07:00"
   },
   "production": {
     "use_env_variable": "DATABASE_URL",
