@@ -36,8 +36,7 @@ module.exports = {
         type: Sequelize.STRING
       },
       answer: {
-        type: Sequelize.TEXT,
-
+        type: Sequelize.TEXT
       },
       predictShallowFilter: {
         type: Sequelize.INTEGER

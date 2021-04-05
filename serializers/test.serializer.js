@@ -6,7 +6,12 @@ const testSerializer = {
       id: test.id,
       testVersionId: test.testVersionId,
       questions: questions ? questions.map(question => testPoolSerializer.new(question)) : JSON.parse(test.questionIds),
-      code: test.code
+      code: test.code,
+      name: test.name,
+      timer: test.timer,
+      isClose: test.isClose,
+      description: test.description,
+      entryCode: test.entryCode
     })
   }
 };
