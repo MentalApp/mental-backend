@@ -209,16 +209,16 @@ const testController = {
             const entryCode = req.body.entryCode;
 
             if (entryCode) {
-              const condition = { entryCode: { [Op.eq]: `${entryCode}` } };
-              const hasDuplicateCode = await Test.findAll({ where: condition });
-              if (hasDuplicateCode.some(x => x.id !== id)) {
+              // const condition = { entryCode: { [Op.eq]: `${entryCode}` } };
+              const hasDuplicateCode = startedTests.some(x => x.entryCode === entryCode && x.id !== id);
+              if (hasDuplicateCode) {
                 serviceResult.success = false;
                 serviceResult.error = "Duplicate entryCode";
               }
               else {
                 const joinInKey = appconfig.cacheKey.joinIn + entryCode.toString();
                 const coefficientMsToMinute = 60000;
-                const testValue = test.dataValues;
+                const testValue = { ...test.dataValues };
                 const timer = test.timer || 90;
                 const testWithEntryCode = Object.assign(testValue, {
                   entryCode: entryCode
@@ -231,6 +231,7 @@ const testController = {
                 });
 
                 test.update({ isClose: false, entryCode: entryCode });
+
                 serviceResult.data = testWithEntryCode;
                 serviceResult.success = true;
               }
@@ -266,14 +267,21 @@ const testController = {
   clearTest: async (req, res) => {
     let serviceResult = resultUtil.new();
     try {
-      memoryCache.clear();
       const id = req.body.id;
       if (id) {
-        const data = await Test.update({ isClose: true }, { where: { id: id }, validate: false });
-        serviceResult.data = data ? true : false;
-        serviceResult.success = true;
+        const test = await Test.findByPk(id);
+        if (test && test.entryCode) {
+          const isDelete = memoryCache.del(appconfig.cacheKey.joinIn + test.entryCode.toString());
+          if (!isDelete) {
+            console.log("cache not found!");
+          }
+          const data = await Test.update({ isClose: true }, { where: { id: id }, validate: false });
+          serviceResult.data = data ? true : false;
+          serviceResult.success = true;
+        } else {
+          throw ("Test not found");
+        }
       }
-
     } catch (error) {
       exceptionUtil.handlerErrorAPI(res, serviceResult, error);
     } finally {
