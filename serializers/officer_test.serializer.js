@@ -1,5 +1,5 @@
 const officerTestSerializer = {
-  new: (officerTest) => {
+  new: (officerTest, test) => {
     return ({
       id:                   officerTest.id,
       name:                 officerTest.name,
@@ -16,6 +16,12 @@ const officerTestSerializer = {
       otherPeople:          officerTest.otherPeople,
       predictShallowFilter: officerTest.predictShallowFilter,
       predictDeepFilter:    officerTest.predictDeepFilter,
+      testVersion:          !test ? officerTest.testVersion : {
+                              id: test.id,
+                              name: test.name,
+                              code: test.code,
+                              description: test.description
+                            }          
     })
   }
 };
