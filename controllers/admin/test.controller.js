@@ -7,72 +7,89 @@ const resultUtil = require('../../servicehelper/service.result');
 const exceptionUtil = require('../../handler_error/exceptionUtil');
 
 const httpCode = require('http-status-codes');
+const serviceResult = require("../../servicehelper/service.result");
 
 const Test = db.Test;
 const TestPool = db.TestPool;
 const Op = db.Sequelize.Op;
 
 const testController = {
+  /**
+   * @endpoint POST("/test_pools")
+   * @param {*} req 
+   * @param {*} res 
+   */
   createTestPool: async (req, res) => {
-    const testPool = req.body;
-
-    TestPool.create(testPool)
-      .then(data => {
-        res.json({
-          success: true,
-          data: testPoolSerializer.new(data)
-        });
-      })
-      .catch(err => {
-        res.status(400).json({
-          success: false,
-          error: err.message || "Some error occurred while creating the Test Pool."
-        });
-      });
+    let serviceResult = resultUtil.new()
+    try {
+      const testPool = req.body;
+      const question = TestPool.create(testPool);
+      if (question) {
+        serviceResult.code = 200;
+        serviceResult.success = true;
+        serviceResult.data = testPoolSerializer.new(question);
+      } else {
+        serviceResult.code = 400;
+        serviceResult.success = false;
+        serviceResult.error = "Some error occurred while creating the Test Pool.";
+      }
+    } catch {
+      exceptionUtil.handlerErrorAPI(res, serviceResult, error);
+    } finally {
+      res.json(serviceResult);
+    }
   },
 
+  /**
+   * @endpoint GET("/test_pools")
+   * @param {*} req 
+   * @param {*} res 
+   */
   findAllTestPool: async (req, res) => {
-    const question = req.query.question;
-    var condition = question ? { question: { [Op.like]: `%${question}%` } } : null;
-
-    TestPool.findAll({ where: condition })
-      .then(data => {
-        res.json({
-          success: true,
-          data: data.map(item => testPoolSerializer.new(item))
-        });
-      })
-      .catch(err => {
-        res.status(400).json({
-          success: false,
-          error: err.message || "Some error occurred while retrieving test pool."
-        });
-      });
+    let serviceResult = resultUtil.new();
+    try {
+      const question = req.query.question;
+      const condition = { question: { [Op.substring]: question ? question : "" } };
+      const questions = TestPool.findAll({ where: condition })
+      if (questions) {
+        serviceResult.code = 200;
+        serviceResult.success = true;
+        serviceResult.data = data.map(item => testPoolSerializer.new(item));
+      } else {
+        serviceResult.code = 400;
+        serviceResult.success = false;
+        serviceResult.error = "Some error occurred while retrieving test pools.";
+      }
+    } catch {
+      exceptionUtil.handlerErrorAPI(res, serviceResult, error);
+    } finally {
+      res.json(serviceResult);
+    }
   },
 
+  /**
+   * @endpoint DELETE("/test_pools/:id")
+   * @param {*} req 
+   * @param {*} res 
+   */
   deleteTestPool: async (req, res) => {
-    const id = req.params.id;
-
-    TestPool.destroy({
-      where: { id: id }
-    })
-      .then(num => {
-        if (num == 1) {
-          res.send({
-            success: true
-          });
-        } else {
-          res.send({
-            success: false
-          });
-        }
-      })
-      .catch(err => {
-        res.status(400).send({
-          success: false,
-          error: err.message || "Could not delete Test pool with id=" + id
-        });
-      });
+    const serviceResult = resultUtil.new();
+    try {
+      const id = req.params.id;
+      const flag = TestPool.destroy({ where: { id: id } });
+      if (flag == 1) {
+        serviceResult.code = 200;
+        serviceResult.success = true;
+      } else {
+        serviceResult.code = 400;
+        serviceResult.success = false;
+        serviceResult.error = "Could not delete Test pool with id=" + id;
+      }
+    } catch {
+      exceptionUtil.handlerErrorAPI(res, serviceResult, error);
+    } finally {
+      res.json(serviceResult);
+    }
   },
 
   /**
@@ -81,15 +98,17 @@ const testController = {
    * @param {*} res 
    */
   createTest: async (req, res) => {
-    const serviceResult = resultUtil.new();
+    let serviceResult = resultUtil.new();
     try {
       const test = req.body;
       test.questionIds = JSON.stringify(req.body.questionIds);
       const data = await Test.create(test);
       if (data) {
+        serviceResult.code = 200;
         serviceResult.success = true;
         serviceResult.data = testSerializer.new(data);
       } else {
+        serviceResult.code = 400;
         serviceResult.success = false;
         serviceResult.error = "Have exception when insert data";
       }
@@ -106,16 +125,20 @@ const testController = {
    * @param {*} res 
    */
   findAllTest: async (req, res) => {
-    // const codeOfTheTest = req.query.code;
-    // var condition = codeOfTheTest ? { testVersionId: { [Op.like]: `%${codeOfTheTest}%` } } : null;
-    const serviceResult = resultUtil.new();
+    let serviceResult = resultUtil.new();
     try {
-      const test = req.body;
-      test.questionIds = JSON.stringify(req.body.questionIds);
       const data = await Test.findAll();
       if (data) {
         serviceResult.success = true;
-        serviceResult.data = data.map(item => testSerializer.new(item));
+        serviceResult.code = 200;
+        const action = data.map(item => {
+          return TestPool.findAll({ where: { id: { [Op.in]: JSON.parse(item.questionIds) } } })
+        })
+        let result = await Promise.all(action);
+        serviceResult.data = data.map((value, index) => {
+          return testSerializer.new(value, result[index]);
+        });
+
       }
     } catch (error) {
       exceptionUtil.handlerErrorAPI(res, serviceResult, error);
@@ -125,71 +148,66 @@ const testController = {
   },
 
   findOneTest: async (req, res) => {
-    const id = req.params.id;
-
-    Test.findByPk(id)
-      .then(data => {
-        res.json({
-          success: true,
-          data: testSerializer.new(data)
-        });
-      })
-      .catch(err => {
-        res.status(400).json({
-          success: false,
-          error: err.message || "Error retrieving Test with id=" + id
-        });
-      });
+    let serviceResult = resultUtil.new();
+    try {
+      const id = req.params.id;
+      const test = await Test.findByPk(id)
+      if (test) {
+        const questions = await TestPool.findAll({ where: { id: { [Op.in]: JSON.parse(data.questionIds) } } });
+        serviceResult.success = true;
+        serviceResult.code = 200;
+        serviceResult.data = testSerializer.new(data, questions);
+      } else {
+        serviceResult.success = false;
+        serviceResult.code = 404
+        serviceResult.error = "Test not found";
+      }
+    } catch (error) {
+      exceptionUtil.handlerErrorAPI(res, serviceResult, error);
+    } finally {
+      res.json(serviceResult);
+    }
   },
 
   updateTest: async (req, res) => {
-    const id = req.params.id;
-
-    Test.update(req.body, {
-      where: { id: id }
-    })
-      .then(num => {
-        if (num == 1) {
-          res.json({
-            success: true
-          });
-        } else {
-          res.json({
-            success: false
-          });
-        }
-      })
-      .catch(err => {
-        res.status(400).json({
-          success: false,
-          error: err.message || "Error updating Test with id=" + id
-        });
-      });
+    let serviceResult = resultUtil.new();
+    try {
+      const id = req.params.id;
+      const updateParams = req.body
+      const flag = Test.update(updateParams, { where: { id: id } });
+      if (flag == 1) {
+        serviceResult.code = 200;
+        serviceResult.success = true;
+      } else {
+        serviceResult.code = 400;
+        serviceResult.success = false;
+        serviceResult.error = "Error updating Test with id=" + id;
+      }
+    } catch (error) {
+      exceptionUtil.handlerErrorAPI(res, serviceResult, error);
+    } finally {
+      res.json(serviceResult);
+    }
   },
 
   deleteTest: async (req, res) => {
-    const id = req.params.id;
-
-    Test.destroy({
-      where: { id: id }
-    })
-      .then(num => {
-        if (num == 1) {
-          res.json({
-            success: true
-          });
-        } else {
-          res.json({
-            success: false
-          });
-        }
-      })
-      .catch(err => {
-        res.status(400).send({
-          status: false,
-          error: err.message || "Could not delete Test with id=" + id
-        });
-      });
+    let serviceResult = resultUtil.new();
+    try {
+      const id = req.params.id;
+      const flag = Test.destroy({ where: { id: id } })
+      if (flag == 1) {
+        serviceResult.code = 200;
+        serviceResult.success = true;
+      } else {
+        serviceResult.code = 400;
+        serviceResult.success = false;
+        serviceResult.error = "Could not delete Test with id=" + id;
+      }
+    } catch (error) {
+      exceptionUtil.handlerErrorAPI(res, serviceResult, error);
+    } finally {
+      res.json(serviceResult);
+    }
   },
 
   /**
@@ -206,7 +224,7 @@ const testController = {
         if (test && test.isClose) {
           const startedTests = await Test.findAll({ where: { isClose: false } });
           if (startedTests.length < 20) {
-            const entryCode = req.body.entryCode;
+            const joinInCode = req.body.entryCode;
 
             if (entryCode) {
               // const condition = { entryCode: { [Op.eq]: `${entryCode}` } };
@@ -216,12 +234,12 @@ const testController = {
                 serviceResult.error = "Duplicate entryCode";
               }
               else {
-                const joinInKey = appconfig.cacheKey.joinIn + entryCode.toString();
+                const joinInKey = appconfig.cacheKey.joinIn + joinInCode.toString();
                 const coefficientMsToMinute = 60000;
                 const testValue = { ...test.dataValues };
                 const timer = test.timer || 90;
                 const testWithEntryCode = Object.assign(testValue, {
-                  entryCode: entryCode
+                  entryCode: joinInCode
                 });
                 const timeStart = new Date().getTime();
                 //time is ms

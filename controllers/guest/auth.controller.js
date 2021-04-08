@@ -2,12 +2,13 @@ const jwt = require('jsonwebtoken');
 const appSetting = require('../../appconfig/app.config');
 const db = require("../../database/models");
 const memoryCache = require('memory-cache');
+const resultUtil = require('../../servicehelper/service.result')
 const exceptionUtil = require('../../handler_error/exceptionUtil');
 const Test = db.Test;
 
 const authController = {
   joinin: async (req, res) => {
-    let serviceResult = { code: 200, data: null, error: "", success: false }
+    let serviceResult = resultUtil.new()
     try {
       const joinInCode = req.body.code;
       const joinInKeyCache = appSetting.cacheKey.joinIn + `${joinInCode}`;
@@ -21,14 +22,12 @@ const authController = {
           serviceResult.success = true;
         } else {
           serviceResult.error = "Test invalid";
-          res.status(404);
+          serviceResult.code = 400;
         }
       } else {
         serviceResult.error = "Test has expired";
-        res.status(400);
+        serviceResult.code = 400;
       }
-
-
     } catch (error) {
       exceptionUtil.handlerErrorAPI(res, serviceResult, error);
     } finally {

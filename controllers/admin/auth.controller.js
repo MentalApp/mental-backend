@@ -1,39 +1,44 @@
 const jwt = require('jsonwebtoken');
 const bcrypt = require("bcrypt-nodejs");
 
+const resultUtil = require('../../servicehelper/service.result');
+const exceptionUtil = require('../../handler_error/exceptionUtil');
+
 const appSetting = require('../../appconfig/app.config');
 const db = require("../../database/models");
 const User = db.User;
 
 const authController = {
   login: async (req, res) => {
-    user = await User.findOne({ where: { email: req.body.email } })
-    if (!user) {
-      res.status(404).json({
-        success: false,
-        error: 'Authentication failed. User not found.'
-      });
-    } else if (user) {
-      if (!bcrypt.compareSync(req.body.password, user.password)) {
-        res.status(401).json({
-          success: false,
-          error: 'Authentication failed. Wrong password.'
-        });
-      } else {
-        token = jwt.sign({ 
-          email: user.email, 
-          name: user.fullName, 
-          id: user.id,
-          role: "admin"
-        }, appSetting.jwtConfig.secretKey)
-
-        return res.json({
-          success: true,
-          token: token
-        });
+    const serviceResult = resultUtil.new();
+    try {
+      user = await User.findOne({ where: { email: req.body.email } })
+      if (!user) {
+        serviceResult.success = false;
+        serviceResult.error = 'Authentication failed. User not found.';
+        serviceResult.code = 404;
+      } else if (user) {
+        if (!bcrypt.compareSync(req.body.password, user.password)) {
+          serviceResult.success = false;
+          serviceResult.error = 'Authentication failed. Wrong password.';
+          serviceResult.code = 401;
+        } else {
+          token = jwt.sign({ 
+            email: user.email, 
+            name: user.fullName, 
+            id: user.id,
+            role: "admin"
+          }, appSetting.jwtConfig.secretKey)
+          serviceResult.code = 200;
+          serviceResult.success = true;
+          serviceResult.token = token;  
+        }
       }
+    } catch {
+      exceptionUtil.handlerErrorAPI(res, serviceResult, error);
+    } finally {
+      res.json(serviceResult);
     }
-
   },
 
   logout: async (req, res) => {

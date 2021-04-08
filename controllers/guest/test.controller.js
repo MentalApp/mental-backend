@@ -19,20 +19,20 @@ const testController = {
       const id = decode.id
       const test = await Test.findByPk(id);
       if (test) {
-        questionIds = !!test.questionIds ? JSON.parse(test.questionIds) : [];
+        questionIds = test.questionIds ? JSON.parse(test.questionIds) : [];
       }
       else {
         serviceResult.success = false;
-        serviceResult.message = "Test not found";
-        res.status(404)
+        serviceResult.error = "Test not found";
+        serviceResult.code = 404;
       }
-      var condition = { id: { [Op.in]: questionIds } };
-
+      const condition = { id: { [Op.in]: questionIds } };
       const data = await TestPool.findAll({ where: condition });
 
       if (data) {
         serviceResult.data = testSerializer.new(test, data);
         serviceResult.success = true;
+        serviceResult.code = 200;
       }
     } catch (error) {
       exceptionUtil.handlerErrorAPI(res, serviceResult, error);
