@@ -6,9 +6,6 @@ const appconfig = require('../../appconfig/app.config');
 const resultUtil = require('../../servicehelper/service.result');
 const exceptionUtil = require('../../handler_error/exceptionUtil');
 
-const httpCode = require('http-status-codes');
-const serviceResult = require("../../servicehelper/service.result");
-
 const Test = db.Test;
 const TestPool = db.TestPool;
 const Op = db.Sequelize.Op;
@@ -226,7 +223,7 @@ const testController = {
           if (startedTests.length < 20) {
             const joinInCode = req.body.entryCode;
 
-            if (entryCode) {
+            if (joinInCode) {
               // const condition = { entryCode: { [Op.eq]: `${entryCode}` } };
               const hasDuplicateCode = startedTests.some(x => x.entryCode === entryCode && x.id !== id);
               if (hasDuplicateCode) {
@@ -248,7 +245,7 @@ const testController = {
                   console.log(key + `: ${timeStart} - ${new Date.getTime()}`);
                 });
 
-                test.update({ isClose: false, entryCode: entryCode });
+                test.update({ isClose: false, entryCode: joinInCode });
 
                 serviceResult.data = testWithEntryCode;
                 serviceResult.success = true;

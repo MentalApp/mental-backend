@@ -4,6 +4,7 @@ const resultUtil = require('../../servicehelper/service.result');
 const exceptionUtil = require('../../handler_error/exceptionUtil');
 
 const OfficerTest = db.OfficerTest;
+const Test = db.Test;
 const Op = db.Sequelize.Op;
 
 const officerTestController = {
@@ -14,13 +15,17 @@ const officerTestController = {
       const keyword = req.query.keyword;
       const predictShallowFilter = req.query.predictShallowFilter
       const predictDeepFilter = req.query.predictDeepFilter
+      const testVersion = req.query.testVersion
       var condition = {
         [Op.or]: [
           { 
-            name:  { [Op.like]: keyword ? `%${keyword}%` : "%%" } ,
-            militaryCode:  { [Op.like]: keyword ? `%${keyword}%`: "%%" } 
+            name:  { [Op.substring]: keyword ? keyword : "" } 
+          },
+          {
+            militaryCode:  { [Op.substring]: keyword ? keyword : "" } 
           }
-        ]
+        ],
+        testVersion: { [Op.substring]: testVersion ? testVersion : "" }
       }
       if (unit) { Object.assign(condition, { unit: unit }) };
       if (predictDeepFilter) { Object.assign(condition, { predictDeepFilter: predictDeepFilter }) };
@@ -36,7 +41,7 @@ const officerTestController = {
         serviceResult.success = false;
         serviceResult.error = "Some error occurred while retrieving tests.";
       }
-    } catch {
+    } catch(error) {
       exceptionUtil.handlerErrorAPI(res, serviceResult, error);
     } finally {
       res.json(serviceResult);
@@ -48,10 +53,11 @@ const officerTestController = {
     try {
       const id = req.params.id;
       const data = await OfficerTest.findByPk(id)
+      const test = await Test.findByPk(data.id)
       if (data) {
         serviceResult.code = 200;
         serviceResult.success = true;
-        serviceResult.data = officerTestSerializer.new(data);
+        serviceResult.data = officerTestSerializer.new(data, test);
       } else {
         serviceResult.code = 404;
         serviceResult.success = false;

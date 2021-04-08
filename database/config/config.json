@@ -38,15 +38,12 @@
     "timezone":"+07:00"
   },
   "production": {
-    "username": "ment_usr",
-    "password": "fAT9nVCgKpQRDUiF",
-    "database": "ment_db",
-    "host": "144.91.123.108",
-    "dialect": "mysql",
-    "pool": {
-      "min": 0,
-      "max": 5,
-      "idle": 10000
+    "use_env_variable": "DATABASE_URL",
+    "dialectOptions": {
+      "ssl": {
+        "require": true,
+        "rejectUnauthorized": false
+      }
     },
     "timezone":"+07:00"
   }
