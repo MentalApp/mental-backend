@@ -10,12 +10,10 @@ module.exports = {
      */
     return [
       queryInterface.addColumn('Tests', 'startDate', {
-        type: Sequelize.DATE,
-        allowNull: false,
+        type: Sequelize.DATE
       }),
       queryInterface.addColumn('Tests', 'endDate', {
-        type: Sequelize.DATE,
-        allowNull: false,
+        type: Sequelize.DATE
       })
     ];
   },
