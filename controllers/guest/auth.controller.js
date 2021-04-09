@@ -7,14 +7,14 @@ const exceptionUtil = require('../../handler_error/exceptionUtil');
 const Test = db.Test;
 
 const authController = {
-  joinin: async (req, res) => {
+  joinIn: async (req, res) => {
     let serviceResult = resultUtil.new()
     try {
       const joinInCode = req.body.code;
       const joinInKeyCache = appSetting.cacheKey.joinIn + `${joinInCode}`;
-      const testWithEntryCode = memoryCache.get(joinInKeyCache);
-      if (testWithEntryCode && testWithEntryCode.entryCode) {
-        const id = testWithEntryCode.id;
+      const cachingTestValue = memoryCache.get(joinInKeyCache);
+      if (cachingTestValue && cachingTestValue.code) {
+        const id = cachingTestValue.id;
         const test = await Test.findByPk(id);
         if (test && !test.isClose) {
           const token = jwt.sign((test.dataValues), appSetting.jwtConfig.guestSecretKey);

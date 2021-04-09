@@ -3,7 +3,7 @@ module.exports = app => {
   const router = express.Router();
   const authController = require('../../controllers/guest/auth.controller');
 
-  router.post('/joinin', authController.joinin);
+  router.post('/joinin', authController.joinIn);
 
   app.use('/api/guest', router);
 }

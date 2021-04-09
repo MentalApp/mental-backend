@@ -28,7 +28,9 @@ const authController = {
             name: user.fullName, 
             id: user.id,
             role: "admin"
-          }, appSetting.jwtConfig.secretKey)
+          }, appSetting.jwtConfig.secretKey,{
+            expiresIn: appSetting.jwtConfig.expire
+          })
           serviceResult.code = 200;
           serviceResult.success = true;
           serviceResult.token = token;  
@@ -43,7 +45,7 @@ const authController = {
 
   logout: async (req, res) => {
     try {
-        
+
     } catch (error) {
       res.status(400).message(error);
     }
