@@ -53,7 +53,7 @@ const officerTestController = {
     try {
       const id = req.params.id;
       const data = await OfficerTest.findByPk(id)
-      const test = await Test.findByPk(data.id)
+      const test = await Test.findByPk(data.testVersion)
       if (data) {
         serviceResult.code = 200;
         serviceResult.success = true;

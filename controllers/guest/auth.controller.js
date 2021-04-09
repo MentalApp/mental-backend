@@ -11,23 +11,25 @@ const authController = {
     let serviceResult = resultUtil.new()
     try {
       const joinInCode = req.body.code;
-      const joinInKeyCache = appSetting.cacheKey.joinIn + `${joinInCode}`;
-      const cachingTestValue = memoryCache.get(joinInKeyCache);
-      if (cachingTestValue && cachingTestValue.code) {
-        const id = cachingTestValue.id;
-        const test = await Test.findByPk(id);
-        if (test && !test.isClose) {
-          const token = jwt.sign((test.dataValues), appSetting.jwtConfig.guestSecretKey);
+      const test = await Test.findOne({ where: { code: joinInCode } });
+      if (test) {
+        const now = new Date();
+        if (test.startDate && test.endDate && test.startDate <= now && now <= test.endDate) {
+          const token = jwt.sign((test.dataValues), appSetting.jwtConfig.guestSecretKey, {
+            expiresIn: appSetting.jwtConfig.expire
+          });
           serviceResult.token = token;
           serviceResult.success = true;
         } else {
-          serviceResult.error = "Test invalid";
+          serviceResult.error = "Out of time";
           serviceResult.code = 400;
         }
+
       } else {
-        serviceResult.error = "Test has expired";
+        serviceResult.error = "Test not found";
         serviceResult.code = 400;
       }
+
     } catch (error) {
       exceptionUtil.handlerErrorAPI(res, serviceResult, error);
     } finally {

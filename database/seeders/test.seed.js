@@ -1,5 +1,6 @@
 // Write seed here
 const bcrypt = require("bcrypt-nodejs");
+const moment = require("moment");
 
 module.exports = {
   up: (queryInterface, Sequelize) => {
@@ -15,6 +16,8 @@ module.exports = {
           name: "Khảo sát lần 1",
           timer: 90,
           isClose: true,
+          startDate: new Date(),
+          endDate: new Date(moment("01.01.2021", "DD-MM-YYYY").add(1,'years')),
           createdAt: new Date(),
           updatedAt: new Date()
         },
