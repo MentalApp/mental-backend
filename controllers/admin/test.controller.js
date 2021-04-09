@@ -1,10 +1,9 @@
 const db = require("../../database/models");
 const testSerializer = require("../../serializers/test.serializer")
-const testPoolSerializer = require("../../serializers/test_pool.serializer")
-const memoryCache = require('memory-cache');
-const appconfig = require('../../appconfig/app.config');
+const testPoolSerializer = require("../../serializers/test_pool.serializer");
 const resultUtil = require('../../servicehelper/service.result');
 const exceptionUtil = require('../../handler_error/exceptionUtil');
+const testService = require('../../services/admin/test.service');
 
 const Test = db.Test;
 const TestPool = db.TestPool;
@@ -215,60 +214,9 @@ const testController = {
   startTest: async (req, res) => {
     let serviceResult = resultUtil.new();
     try {
-      if (req.body.id) {
-        const id = req.body.id;
-        const test = await Test.findByPk(id);
-        if (test && test.isClose) {
-          const startedTests = await Test.findAll({ where: { isClose: false } });
-          if (startedTests.length < 20) {
-            const joinInCode = req.body.entryCode;
-
-            if (joinInCode) {
-              // const condition = { entryCode: { [Op.eq]: `${entryCode}` } };
-              const hasDuplicateCode = startedTests.some(x => x.entryCode === entryCode && x.id !== id);
-              if (hasDuplicateCode) {
-                serviceResult.success = false;
-                serviceResult.error = "Duplicate entryCode";
-              }
-              else {
-                const joinInKey = appconfig.cacheKey.joinIn + joinInCode.toString();
-                const coefficientMsToMinute = 60000;
-                const testValue = { ...test.dataValues };
-                const timer = test.timer || 90;
-                const testWithEntryCode = Object.assign(testValue, {
-                  entryCode: joinInCode
-                });
-                const timeStart = new Date().getTime();
-                //time is ms
-                memoryCache.put(joinInKey, testWithEntryCode, coefficientMsToMinute * timer, (key, value) => {
-                  test.update({ isClose: true });
-                  console.log(key + `: ${timeStart} - ${new Date.getTime()}`);
-                });
-
-                test.update({ isClose: false, entryCode: joinInCode });
-
-                serviceResult.data = testWithEntryCode;
-                serviceResult.success = true;
-              }
-            } else {
-              throw new Error("Entry code is require for start test");
-            }
-
-          } else {
-            throw new Error("Too many started test");
-          }
-        }
-        else {
-          serviceResult.error = "Test was started";
-          res.status(400);
-        }
-
-      } else {
-        throw new Error("argument incorrect");
-      }
+      serviceResult.data = await testService.startTest(req.body.id);
     } catch (error) {
-      serviceResult.code = 500;
-      serviceResult.message = error.message;
+      exceptionUtil.handlerErrorAPI(res, serviceResult, error);
     } finally {
       res.json(serviceResult);
     }
@@ -283,20 +231,7 @@ const testController = {
     let serviceResult = resultUtil.new();
     try {
       const id = req.body.id;
-      if (id) {
-        const test = await Test.findByPk(id);
-        if (test && test.entryCode) {
-          const isDelete = memoryCache.del(appconfig.cacheKey.joinIn + test.entryCode.toString());
-          if (!isDelete) {
-            console.log("cache not found!");
-          }
-          const data = await Test.update({ isClose: true }, { where: { id: id }, validate: false });
-          serviceResult.data = data ? true : false;
-          serviceResult.success = true;
-        } else {
-          throw ("Test not found");
-        }
-      }
+      serviceResult.data = await testService.clearTest(id);
     } catch (error) {
       exceptionUtil.handlerErrorAPI(res, serviceResult, error);
     } finally {
