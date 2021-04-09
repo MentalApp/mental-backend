@@ -22,7 +22,9 @@ module.exports = (sequelize, DataTypes) => {
     name: DataTypes.STRING,
     timer: DataTypes.INTEGER,
     isClose: DataTypes.BOOLEAN,
-    entryCode: DataTypes.STRING
+    entryCode: DataTypes.STRING,
+    startDate: DataTypes.DATE,
+    endDate: DataTypes.DATE
   }, {
     sequelize,
     charset: 'utf8',

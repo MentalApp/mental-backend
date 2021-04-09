@@ -149,10 +149,10 @@ const testController = {
       const id = req.params.id;
       const test = await Test.findByPk(id)
       if (test) {
-        const questions = await TestPool.findAll({ where: { id: { [Op.in]: JSON.parse(data.questionIds) } } });
+        const questions = await TestPool.findAll({ where: { id: { [Op.in]: JSON.parse(test.questionIds) } } });
         serviceResult.success = true;
         serviceResult.code = 200;
-        serviceResult.data = testSerializer.new(data, questions);
+        serviceResult.data = testSerializer.new(test, questions);
       } else {
         serviceResult.success = false;
         serviceResult.code = 404
