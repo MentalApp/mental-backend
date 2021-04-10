@@ -19,10 +19,13 @@ const officerTestController = {
       var condition = {
         [Op.or]: [
           { 
-            name:  { [Op.substring]: keyword ? keyword : "" } 
+            name:  { [Op.substring]: keyword ? keyword : "" }
+          },
+          { 
+            nameWithoutTone:  { [Op.substring]: keyword ? keyword : "" }
           },
           {
-            militaryCode:  { [Op.substring]: keyword ? keyword : "" } 
+            militaryCode:  { [Op.substring]: keyword ? keyword : "" }
           }
         ],
         testVersion: { [Op.substring]: testVersion ? testVersion : "" }

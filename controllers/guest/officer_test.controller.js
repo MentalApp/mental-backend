@@ -4,6 +4,7 @@ const db = require("../../database/models");
 const officerTestSerializer = require("../../serializers/officer_test.serializer");
 const appSetting = require('../../appconfig/app.config');
 const moment = require('moment');
+const vietnamese = require('../../helpers/vietnameseTone.helper')
 const jwt = require('jsonwebtoken');
 
 const OfficerTest = db.OfficerTest;
@@ -23,6 +24,7 @@ const officerTestController = {
       const officerTest = req.body;
       officerTest.answer = JSON.stringify(officerTest.answer);
       officerTest.testVersion = id.toString();
+      officerTest.nameWithoutTone = vietnamese.removeVietnameseTones(officerTest.name)
       const builderData = OfficerTest.build(officerTest);
       const data = await builderData.save();
       const test = await Test.findByPk(id);

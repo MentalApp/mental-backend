@@ -45,7 +45,8 @@ module.exports = (sequelize, DataTypes) => {
     userConfirmId: DataTypes.STRING,
     otherSymptom: DataTypes.TEXT,
     otherPeople: DataTypes.TEXT,
-    militaryCode: DataTypes.STRING
+    militaryCode: DataTypes.STRING,
+    nameWithoutTone: DataTypes.STRING
   }, {
     sequelize,
     charset: 'utf8',
