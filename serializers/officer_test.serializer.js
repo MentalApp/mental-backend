@@ -20,7 +20,9 @@ const officerTestSerializer = {
                               id: test.id,
                               name: test.name,
                               code: test.code,
-                              description: test.description
+                              description: test.description,
+                              startDate: test.startDate,
+                              endDate: test.endDate
                             }          
     })
   }

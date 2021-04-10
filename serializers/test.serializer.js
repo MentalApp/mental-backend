@@ -11,7 +11,8 @@ const testSerializer = {
       timer: test.timer,
       isClose: test.isClose,
       description: test.description,
-      entryCode: test.entryCode
+      startDate: test.startDate,
+      endDate: test.endDate
     })
   }
 };
