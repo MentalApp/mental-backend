@@ -4,6 +4,7 @@ const testPoolSerializer = require("../../serializers/test_pool.serializer");
 const resultUtil = require('../../servicehelper/service.result');
 const exceptionUtil = require('../../handler_error/exceptionUtil');
 const testService = require('../../services/admin/test.service');
+const { defaultPaging } = require('../../helpers/constant');
 
 const Test = db.Test;
 const TestPool = db.TestPool;
@@ -122,18 +123,28 @@ const testController = {
    */
   findAllTest: async (req, res) => {
     let serviceResult = resultUtil.new();
+    const perPage = +req.query.perPage || defaultPaging.perPage;
+    const page = +req.query.page || defaultPaging.page;
     try {
-      const data = await Test.findAll();
-      if (data) {
+      const { count, rows } = await Test.findAndCountAll({
+        limit: perPage,
+        offset: perPage * page - perPage
+      });
+
+      if (rows) {
         serviceResult.success = true;
         serviceResult.code = 200;
-        const action = data.map(item => {
-          return TestPool.findAll({ where: { id: { [Op.in]: JSON.parse(item.questionIds) } } })
+
+        const action = rows.map(item => {
+          return TestPool.findAll({
+            where: { id: { [Op.in]: JSON.parse(item.questionIds) } }
+          })
         })
         let result = await Promise.all(action);
-        serviceResult.data = data.map((value, index) => {
+        serviceResult.data = rows.map((value, index) => {
           return testSerializer.new(value, result[index]);
         });
+        serviceResult.totalPages = Math.ceil(count / perPage);
 
       }
     } catch (error) {
