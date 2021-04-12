@@ -17,26 +17,26 @@ const authController = {
         serviceResult.success = false;
         serviceResult.error = 'Authentication failed. User not found.';
         serviceResult.code = 404;
-      } else if (user) {
+      } else {
         if (!bcrypt.compareSync(req.body.password, user.password)) {
           serviceResult.success = false;
           serviceResult.error = 'Authentication failed. Wrong password.';
           serviceResult.code = 401;
         } else {
-          token = jwt.sign({ 
-            email: user.email, 
-            name: user.fullName, 
+          token = jwt.sign({
+            email: user.email,
+            name: user.fullName,
             id: user.id,
             role: "admin"
-          }, appSetting.jwtConfig.secretKey,{
+          }, appSetting.jwtConfig.secretKey, {
             expiresIn: appSetting.jwtConfig.expire
           })
           serviceResult.code = 200;
           serviceResult.success = true;
-          serviceResult.token = token;  
+          serviceResult.token = token;
         }
       }
-    } catch {
+    } catch (error) {
       exceptionUtil.handlerErrorAPI(res, serviceResult, error);
     } finally {
       res.json(serviceResult);

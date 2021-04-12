@@ -2,6 +2,7 @@ const db = require("../../database/models");
 const officerTestSerializer = require("../../serializers/officer_test.serializer")
 const resultUtil = require('../../servicehelper/service.result');
 const exceptionUtil = require('../../handler_error/exceptionUtil');
+const { defaultPaging } = require('../../helpers/constant');
 
 const OfficerTest = db.OfficerTest;
 const Test = db.Test;
@@ -11,11 +12,13 @@ const officerTestController = {
   findAll: async (req, res) => {
     let serviceResult = resultUtil.new();
     try {
+      const perPage = +req.query.perPage || defaultPaging.perPage;
+      const page = +req.query.page || defaultPaging.page;
       const unit = req.query.unit;
       const keyword = req.query.keyword;
       const predictShallowFilter = req.query.predictShallowFilter
       const predictDeepFilter = req.query.predictDeepFilter
-      const testVersion = req.query.testVersion
+      const testVersion = req.query.testVersion;
       var condition = {
         [Op.or]: [
           { 
@@ -34,17 +37,25 @@ const officerTestController = {
       if (predictDeepFilter) { Object.assign(condition, { predictDeepFilter: predictDeepFilter }) };
       if (predictShallowFilter) { Object.assign(condition, { predictShallowFilter: predictShallowFilter }) };
 
-      const data = await OfficerTest.findAll({ where: condition })
+      const option = {
+        where: condition,
+        limit: perPage,
+        offset: perPage * page - perPage
+      };
+      const { count, rows } = await OfficerTest.findAndCountAll(option);
+      const data = rows
+
       if (data) {
         serviceResult.code = 200;
         serviceResult.success = true;
         serviceResult.data = data.map(item => officerTestSerializer.new(item))
+        serviceResult.totalPages = Math.ceil(count / perPage);
       } else {
         serviceResult.code = 400;
         serviceResult.success = false;
         serviceResult.error = "Some error occurred while retrieving tests.";
       }
-    } catch(error) {
+    } catch (error) {
       exceptionUtil.handlerErrorAPI(res, serviceResult, error);
     } finally {
       res.json(serviceResult);

@@ -4,6 +4,7 @@ const db = require("../../database/models");
 const memoryCache = require('memory-cache');
 const resultUtil = require('../../servicehelper/service.result')
 const exceptionUtil = require('../../handler_error/exceptionUtil');
+const { Sequelize, QueryTypes } = require('sequelize');
 const Test = db.Test;
 
 const authController = {
@@ -13,7 +14,8 @@ const authController = {
       const joinInCode = req.body.code;
       const test = await Test.findOne({ where: { code: joinInCode } });
       if (test) {
-        const now = new Date();
+        const [{ now }] = (await Test.queryInterface.sequelize.query("select now() as now", { type: QueryTypes.SELECT }));
+        console.log(now, test.startDate, test.endDate);
         if (test.startDate && test.endDate && test.startDate <= now && now <= test.endDate) {
           const token = jwt.sign((test.dataValues), appSetting.jwtConfig.guestSecretKey, {
             expiresIn: appSetting.jwtConfig.expire

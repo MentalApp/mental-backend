@@ -1,6 +1,7 @@
 module.exports = {
-  handlerErrorAPI: (res, serivceResult, error) => {
-    res.status(500);
-    serivceResult.error = error.message;
+  handlerErrorAPI: (res, serviceResult, error) => {
+    serviceResult.code = 500;
+    serviceResult.error = error.message;
+    console.log(error);
   }
 }
