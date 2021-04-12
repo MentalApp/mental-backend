@@ -20,7 +20,7 @@ const testController = {
     let serviceResult = resultUtil.new()
     try {
       const testPool = req.body;
-      const question = TestPool.create(testPool);
+      const question = await TestPool.create(testPool);
       if (question) {
         serviceResult.code = 200;
         serviceResult.success = true;
@@ -47,7 +47,7 @@ const testController = {
     try {
       const question = req.query.question;
       const condition = { question: { [Op.substring]: question ? question : "" } };
-      const questions = TestPool.findAll({ where: condition })
+      const questions = await TestPool.findAll({ where: condition })
       if (questions) {
         serviceResult.code = 200;
         serviceResult.success = true;
@@ -73,7 +73,7 @@ const testController = {
     const serviceResult = resultUtil.new();
     try {
       const id = req.params.id;
-      const flag = TestPool.destroy({ where: { id: id } });
+      const flag = await TestPool.destroy({ where: { id: id } });
       if (flag == 1) {
         serviceResult.code = 200;
         serviceResult.success = true;
@@ -180,8 +180,11 @@ const testController = {
     let serviceResult = resultUtil.new();
     try {
       const id = req.params.id;
-      const updateParams = req.body
-      const flag = Test.update(updateParams, { where: { id: id } });
+      const updateParams = req.body;
+      if (updateParams && updateParams.questionIds) {
+        updateParams.questionIds = JSON.stringify(updateParams.questionIds);
+      }
+      const [flag] = await Test.update(updateParams, { where: { id: id } });
       if (flag == 1) {
         serviceResult.code = 200;
         serviceResult.success = true;
@@ -201,7 +204,7 @@ const testController = {
     let serviceResult = resultUtil.new();
     try {
       const id = req.params.id;
-      const flag = Test.destroy({ where: { id: id } })
+      const flag = await Test.destroy({ where: { id: id } })
       if (flag == 1) {
         serviceResult.code = 200;
         serviceResult.success = true;
