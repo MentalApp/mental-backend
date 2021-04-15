@@ -16,6 +16,7 @@ const authController = {
       if (test) {
         const [{ now }] = (await Test.queryInterface.sequelize.query("select now() as now", { type: QueryTypes.SELECT }));
         console.log(now, test.startDate, test.endDate);
+        console.log(new Date());
         if (test.startDate && test.endDate && test.startDate <= now && now <= test.endDate) {
           const token = jwt.sign((test.dataValues), appSetting.jwtConfig.guestSecretKey, {
             expiresIn: appSetting.jwtConfig.expire

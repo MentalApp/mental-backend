@@ -125,11 +125,16 @@ const testController = {
     let serviceResult = resultUtil.new();
     const perPage = +req.query.perPage || defaultPaging.perPage;
     const page = +req.query.page || defaultPaging.page;
+    const name = req.query.name;
     try {
-      const { count, rows } = await Test.findAndCountAll({
+      const option = {
+        where: { name:  { [Op.substring]: name ? name : "" } },
+        order: [['id', 'DESC']],
         limit: perPage,
         offset: perPage * page - perPage
-      });
+      };
+
+      const { count, rows } = await Test.findAndCountAll(option);
 
       if (rows) {
         serviceResult.success = true;

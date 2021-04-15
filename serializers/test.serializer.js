@@ -1,4 +1,5 @@
-const testPoolSerializer = require("./test_pool.serializer")
+const testPoolSerializer = require("./test_pool.serializer");
+const dateHelper = require('../helpers/date.helper');
 
 const testSerializer = {
   new: (test, questions) => {
@@ -11,8 +12,8 @@ const testSerializer = {
       timer: test.timer,
       isClose: test.isClose,
       description: test.description,
-      startDate: test.startDate,
-      endDate: test.endDate
+      startDate: dateHelper.formatDateTimeToString(test.startDate),
+      endDate: dateHelper.formatDateTimeToString(test.endDate)
     })
   }
 };
