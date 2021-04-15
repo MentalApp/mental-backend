@@ -1,6 +1,7 @@
 const moment = require('moment');
 const dateTimePattern = "DD/MM/YYYY";
 const monthPattern = "MM/YYYY";
+const fullTimePattern = "DD/MM/YYYY hh:mm:ss"
 module.exports = {
   formatDateStringToObject: (dateString) => {
     if (moment(dateString, dateTimePattern).isValid()) {
@@ -15,5 +16,12 @@ module.exports = {
     } else {
       return null;
     }
+  },
+
+  formatDateTimeToString: (dateObject) => {
+    if (dateObject && moment(dateObject).isValid()) {
+      return moment(dateObject).format(fullTimePattern);
+    }
+    return null;
   }
 }

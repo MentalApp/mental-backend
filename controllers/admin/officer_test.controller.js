@@ -39,6 +39,7 @@ const officerTestController = {
 
       const option = {
         where: condition,
+        order: [['id', 'DESC']],
         limit: perPage,
         offset: perPage * page - perPage
       };
