@@ -1,5 +1,3 @@
-const dateHelper = require('../helpers/date.helper');
-
 const officerTestSerializer = {
   new: (officerTest, test) => {
     return ({
@@ -23,8 +21,8 @@ const officerTestSerializer = {
                               name: test.name,
                               code: test.code,
                               description: test.description,
-                              startDate: dateHelper.formatDateTimeToString(test.startDate),
-                              endDate: dateHelper.formatDateTimeToString(test.endDate)
+                              startDate: test.startDate,
+                              endDate: test.endDate
                             }          
     })
   }
