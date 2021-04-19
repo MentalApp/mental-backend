@@ -1,9 +1,7 @@
 {
-  "consumers":[
-    {
-      "jobTitle":"saveAnswner",
-      "handlerFunction":"saveAnswer",
-      "jobQueue":"queue_save_answer"
-    }
-  ]
+  "consumers": [{
+    "jobTitle": "saveAnswner",
+    "handlerFunction": "saveAnswer",
+    "jobQueue": "queue_save_answer"
+  }]
 }
