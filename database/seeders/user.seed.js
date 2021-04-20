@@ -1,6 +1,5 @@
 // Write seed here
-const bcrypt = require('bcrypt-nodejs');
-const {Roles, Sex, BlockStatus} = require('../../helpers/constant');
+const bcrypt = require("bcrypt-nodejs");
 
 module.exports = {
   up: (queryInterface, Sequelize) => {
@@ -8,29 +7,23 @@ module.exports = {
       'Users',
       [
         {
-          fullName: 'Admin',
-          nameWithoutUtf8: 'admin',
+          fullName: 'Nguyễn Văn A',  
           email: 'admin@gmail.com',
-          militaryCode: '123456',
           phone: '0123456789',
-          sex: Sex.Men.value,
           type: '',
-          password: bcrypt.hashSync('123456', bcrypt.genSaltSync(8), null),
-          role: Roles.admin,
-          joinArmy: new Date(),
+          password: bcrypt.hashSync("123456", bcrypt.genSaltSync(8), null),
+          role: 1,
+          joinArmy: new Date('2020-06-01T00:00:00.000Z'),
           unit: 1,
-          rank: '',
-          isBlock: BlockStatus.false.value,
-          position: '',
+          rank: "b2",
+          position: "",
           createdAt: new Date(),
-          updatedAt: new Date(),
+          updatedAt: new Date()
         },
-      ],
-      {},
-    );
+      ], {})
   },
 
   down: (queryInterface, Sequelize) => {
-    return queryInterface.bulkDelete('Users', null, {});
-  },
-};
+    return queryInterface.bulkDelete('Users', null, {})
+  }
+}

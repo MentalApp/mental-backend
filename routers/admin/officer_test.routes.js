@@ -1,11 +1,12 @@
-module.exports = (app) => {
-  const officerTests = require('../../controllers/admin/officer_test.controller.js');
-  const {authMidleRole} = require('../../middlewares/auth.middleware');
+module.exports = app => {
+  const officerTests = require("../../controllers/admin/officer_test.controller.js");
+  const authMiddleware = require('../../middlewares/auth.middleware');
 
-  var router = require('express').Router();
+  var router = require("express").Router();
 
-  router.get('/', officerTests.findAll);
-  router.get('/:id', officerTests.findOne);
+  router.get("/", officerTests.findAll);
+  router.get("/:id", officerTests.findOne);
 
-  app.use('/api/admin/officer_tests', authMidleRole, router);
+  app.use('/api/admin/officer_tests', authMiddleware.authAdmin, router);
 };
+  
