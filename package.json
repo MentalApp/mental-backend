@@ -8,7 +8,6 @@
   "dependencies": {
     "amqplib": "^0.7.1",
     "bcrypt-nodejs": "^0.0.3",
-    "chalk": "^4.1.0",
     "cors": "^2.8.5",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
@@ -18,16 +17,14 @@
     "mariadb": "^2.5.3",
     "memory-cache": "^0.2.0",
     "moment": "^2.29.1",
-    "morgan": "^1.10.0",
     "mysql2": "^2.2.5",
-    "nodemon": "^2.0.7",
     "pg": "^8.5.1",
     "pg-hstore": "^2.3.3",
     "sequelize": "^6.6.0",
     "sequelize-cli": "^6.2.0"
   },
   "scripts": {
-    "start": "NODE_ENV=development nodemon server.js",
+    "start": "NODE_ENV=development node server.js",
     "runproduction": "NODE_ENV=production node server.js"
   }
 }

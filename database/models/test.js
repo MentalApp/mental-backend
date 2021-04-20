@@ -1,5 +1,7 @@
 'use strict';
-const {Model} = require('sequelize');
+const {
+  Model
+} = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
   class Test extends Model {
     /**
@@ -10,34 +12,31 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       // define association here
     }
-  }
-  Test.init(
-    {
-      index: DataTypes.INTEGER,
-      testVersionId: DataTypes.STRING,
-      questionIds: DataTypes.TEXT,
-      description: DataTypes.TEXT,
-      code: DataTypes.STRING,
-      name: DataTypes.STRING,
-      timer: DataTypes.INTEGER,
-      isClose: DataTypes.BOOLEAN,
-      entryCode: DataTypes.STRING,
-      startDate: DataTypes.DATE,
-      endDate: DataTypes.DATE,
-    },
-    {
-      sequelize,
-      charset: 'utf8',
-      modelName: 'Test',
-      validate: {
-        requireOption() {
-          const me = this;
-          if (!me.code) {
-            throw new Error('code is require');
-          }
-        },
-      },
-    },
-  );
+  };
+  Test.init({
+    index: DataTypes.INTEGER,
+    testVersionId: DataTypes.STRING,
+    questionIds: DataTypes.TEXT,
+    description: DataTypes.TEXT,
+    code: DataTypes.STRING,
+    name: DataTypes.STRING,
+    timer: DataTypes.INTEGER,
+    isClose: DataTypes.BOOLEAN,
+    entryCode: DataTypes.STRING,
+    startDate: DataTypes.DATE,
+    endDate: DataTypes.DATE
+  }, {
+    sequelize,
+    charset: 'utf8',
+    modelName: 'Test',
+    validate: {
+      requireOption() {
+        const me = this;
+        if (!me.code) {
+          throw new Error("code is require");
+        }
+      }
+    }
+  });
   return Test;
 };

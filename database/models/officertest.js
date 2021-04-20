@@ -1,8 +1,10 @@
 'use strict';
 const dateHelper = require('../../helpers/date.helper');
-const filterService = require('../../services/filter.service');
+const filterService = require("../../services/filter.service")
 const moment = require('moment');
-const {Model} = require('sequelize');
+const {
+  Model
+} = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
   class OfficerTest extends Model {
     /**
@@ -24,55 +26,59 @@ module.exports = (sequelize, DataTypes) => {
       this.dateOfBirth = dateHelper.formatDateStringToObject(values.dateOfBirth);
       this.joinArmy = dateHelper.formatMonth(values.joinArmy);
     }
-  }
-  OfficerTest.init(
-    {
-      question: DataTypes.TEXT,
-      name: DataTypes.STRING,
-      dateOfBirth: DataTypes.DATE,
-      gender: DataTypes.INTEGER,
-      nation: DataTypes.STRING,
-      joinArmy: DataTypes.DATE,
-      unit: DataTypes.INTEGER,
-      rank: DataTypes.STRING,
-      position: DataTypes.STRING,
-      answer: DataTypes.TEXT,
-      predictShallowFilter: DataTypes.INTEGER,
-      predictDeepFilter: DataTypes.INTEGER,
-      testTime: DataTypes.INTEGER,
-      testVersion: DataTypes.STRING,
-      userConfirmId: DataTypes.STRING,
-      otherSymptom: DataTypes.TEXT,
-      otherPeople: DataTypes.TEXT,
-      militaryCode: DataTypes.STRING,
-      nameWithoutTone: DataTypes.STRING,
-    },
-    {
-      sequelize,
-      charset: 'utf8',
-      modelName: 'OfficerTest',
-      validate: {
-        requireOptions() {
-          const me = this;
-          if (!me.militaryCode) {
-            throw new Error('militaryCode is require');
-          }
-          if (!me.answer) {
-            throw new Error('answer is require');
-          }
-          if (!me.unit) {
-            throw new Error('unit is require');
-          }
-        },
-      },
-    },
-  );
-  OfficerTest.addHook('beforeSave', async (instance, options) => {
+  };
+  OfficerTest.init({
+    question: DataTypes.TEXT,
+    name: DataTypes.STRING,
+    dateOfBirth: DataTypes.DATE,
+    gender: DataTypes.INTEGER,
+    nation: DataTypes.STRING,
+    joinArmy: DataTypes.DATE,
+    unit: DataTypes.INTEGER,
+    rank: DataTypes.STRING,
+    position: DataTypes.STRING,
+    answer: DataTypes.TEXT,
+    predictShallowFilter: DataTypes.INTEGER,
+    predictDeepFilter: DataTypes.INTEGER,
+    testTime: DataTypes.INTEGER,
+    testVersion: DataTypes.STRING,
+    userConfirmId: DataTypes.STRING,
+    otherSymptom: DataTypes.TEXT,
+    otherPeople: DataTypes.TEXT,
+    militaryCode: DataTypes.STRING,
+    nameWithoutTone: DataTypes.STRING
+  }, {
+    sequelize,
+    charset: 'utf8',
+    modelName: 'OfficerTest',
+    validate: {
+      requireOptions() {
+        const me = this;
+        if (!me.militaryCode) {
+          throw new Error("militaryCode is require");
+        }
+        if (!me.answer) {
+          throw new Error("answer is require");
+        }
+        if (!me.unit) {
+          throw new Error("unit is require");
+        }
+
+      }
+    }
+  });
+  OfficerTest.addHook("beforeSave", async (instance, options) => {
     const shallowFilter = await filterService.shallowFilter(instance);
     const deepFilter = await filterService.deepFilter(instance);
-
+    
     instance.predictShallowFilter = shallowFilter;
     instance.predictDeepFilter = deepFilter;
-  });
+    // console.log(instance.answer)
+    // if ( typeof instance.answer !== "string") {
+    //   instance.answer = JSON.stringify(instance.answer)
+    // }
+  })
   return OfficerTest;
 };
+
+
