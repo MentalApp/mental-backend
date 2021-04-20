@@ -24,7 +24,6 @@ const authMiddleware = {
         });
       }
     } catch (error) {
-      console.log(error.message);
       res.status(StatusCodes.UNAUTHORIZED).json({
         success: false,
         error: getReasonPhrase(StatusCodes.UNAUTHORIZED),

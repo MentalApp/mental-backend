@@ -12,21 +12,21 @@ const User = db.User;
 const authController = {
   login: async (req, res) => {
     if (!req.body.email || !req.body.password) {
-      res.status(400).json({
+      return res.status(400).json({
         success: false,
         error: ErrorMessage.USERNAME_AND_PASSWORD_IS_REQUIRE,
       });
     }
     const user = await User.findOne({where: {email: req.body.email}});
     if (!user) {
-      res.status(404).json({
+      return res.status(404).json({
         success: false,
         error: ErrorMessage.USER_NOT_FOUND,
       });
     }
 
     if (user.isBlock === 1) {
-      res.status(404).json({
+      return res.status(404).json({
         success: false,
         code: 1001,
         error: ErrorMessage.USER_IS_BLOCKING,
@@ -34,7 +34,7 @@ const authController = {
     }
 
     if (!bcrypt.compareSync(req.body.password, user.password)) {
-      res.status(404).json({
+      return res.status(404).json({
         success: false,
         error: ErrorMessage.WRONG_PASSWORD,
       });
@@ -52,7 +52,7 @@ const authController = {
       },
     );
 
-    res.status(200).json({
+    return res.status(200).json({
       success: true,
       data: {
         token: token,
@@ -75,17 +75,17 @@ const authController = {
       const decode = jwt.verify(token, appSetting.jwtConfig.secretKey);
       if (decode) {
         const user = await User.findOne({where: {email: decode.email}});
-        res.status(200).json({
+        return res.status(200).json({
           message: user,
         });
       } else {
-        res.status(200).json({
+        return res.status(200).json({
           success: false,
           error: ErrorMessage.TOKEN_IS_INVALID,
         });
       }
     } catch (error) {
-      res.status(400).json({
+      return res.status(400).json({
         success: false,
         error: error.message,
       });

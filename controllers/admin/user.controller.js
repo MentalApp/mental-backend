@@ -21,14 +21,14 @@ const UserController = {
     const isExistMilitaryCode = await User.findOne({where: {militaryCode: req.body.militaryCode}});
 
     if (isExist) {
-      res.status(400).json({
+      return res.status(400).json({
         success: false,
         error: ErrorMessage.USER_IS_EXISTED,
       });
     }
 
     if (isExistMilitaryCode) {
-      res.status(400).json({
+      return res.status(400).json({
         success: false,
         error: ErrorMessage.MILITARYCODE_IS_EXISTED,
       });
@@ -46,13 +46,13 @@ const UserController = {
 
     const save = await User.create(user);
     if (!save) {
-      res.status(404).json({
+      return res.status(404).json({
         success: false,
         error: ErrorMessage.CREATE_USER_IS_NOT_SUCCESS,
       });
     }
 
-    res.status(201).json({
+    return res.status(201).json({
       success: true,
       data: userSerializer.new(save),
     });
@@ -92,12 +92,12 @@ const UserController = {
       offset: perPage * page - perPage,
     });
     if (!rows) {
-      res.status(404).json({
+      return res.status(404).json({
         success: false,
         error: ErrorMessage.USERS_IS_NOT_FOUND,
       });
     }
-    res.json({
+    return res.status(200).json({
       success: true,
       totalPages: Math.ceil(count / perPage),
       data: rows.map((item) => userSerializer.new(item)),
@@ -106,7 +106,7 @@ const UserController = {
 
   findOne: async (req, res) => {
     if (!req.params.id) {
-      res.status(400).json({
+      return res.status(400).json({
         success: false,
         error: ErrorMessage.ID_IS_INVALID,
       });
@@ -114,13 +114,13 @@ const UserController = {
     const find = await User.findByPk(req.params.id);
 
     if (!find) {
-      res.status(404).json({
+      return res.status(404).json({
         success: false,
         error: 'Error retrieving User with id=' + req.params.id,
       });
     }
 
-    res.status(200).json({
+    return res.status(200).json({
       success: true,
       data: userSerializer.new(find),
     });
@@ -128,30 +128,29 @@ const UserController = {
 
   update: async (req, res) => {
     if (!req.params.id) {
-      res.status(400).json({
+      return res.status(400).json({
         success: false,
         error: ErrorMessage.ID_IS_INVALID,
       });
     }
 
     const user = await User.findOne({where: {id: req.params.id}});
-    console.log(user);
     if (!user) {
-      res.status(404).json({
+      return res.status(404).json({
         success: false,
         error: ErrorMessage.USER_NOT_FOUND,
       });
     }
 
     if (req.body.isBlock) {
-      res.status(401).json({
+      return res.status(401).json({
         success: false,
         error: ErrorMessage.ACCOUNT_IS_UNAUTHORIZE,
       });
     }
 
     if (req.body.password && !req.body.newPassword) {
-      res.status(400).json({
+      return res.status(400).json({
         success: false,
         error: ErrorMessage.BAD_REQUEST,
       });
@@ -159,7 +158,7 @@ const UserController = {
 
     if (req.body.password && req.body.newPassword) {
       if (!bcrypt.compareSync(req.body.password, user.password)) {
-        res.status(400).json({
+        return res.status(400).json({
           success: false,
           error: ErrorMessage.BAD_REQUEST,
         });
@@ -176,13 +175,13 @@ const UserController = {
       },
     );
     if (!save) {
-      res.status(404).json({
+      return res.status(404).json({
         success: false,
         error: ErrorMessage.UPDATE_IS_FAILED,
       });
     }
 
-    res.status(200).json({
+    return res.status(200).json({
       success: true,
       data: save,
     });
@@ -190,7 +189,7 @@ const UserController = {
 
   updateWithRoleAdmin: async (req, res) => {
     if (!req.params.id) {
-      res.status(400).json({
+      return res.status(400).json({
         success: false,
         error: ErrorMessage.ID_IS_INVALID,
       });
@@ -198,14 +197,14 @@ const UserController = {
 
     const user = await User.findOne({where: {id: req.params.id}});
     if (!user) {
-      res.status(404).json({
+      return res.status(404).json({
         success: false,
         error: ErrorMessage.USER_NOT_FOUND,
       });
     }
 
     if (req.body.password && !req.body.newPassword) {
-      res.status(400).json({
+      return res.status(400).json({
         success: false,
         error: ErrorMessage.BAD_REQUEST,
       });
@@ -213,7 +212,7 @@ const UserController = {
 
     if (req.body.password && req.body.newPassword) {
       if (!bcrypt.compareSync(req.body.password, user.password)) {
-        res.status(400).json({
+        return res.status(400).json({
           success: false,
           error: ErrorMessage.BAD_REQUEST,
         });
@@ -232,13 +231,13 @@ const UserController = {
     );
 
     if (!save) {
-      res.status(404).json({
+      return res.status(404).json({
         success: false,
         error: ErrorMessage.UPDATE_IS_FAILED,
       });
     }
 
-    res.status(200).json({
+    return res.status(200).json({
       success: true,
       data: save,
     });
@@ -246,7 +245,7 @@ const UserController = {
 
   delete: async (req, res) => {
     if (!req.params.id) {
-      res.status(400).json({
+      return res.status(400).json({
         success: false,
         error: ErrorMessage.ID_IS_INVALID,
       });
@@ -254,7 +253,7 @@ const UserController = {
 
     const user = await User.findOne({where: {id: req.params.id}});
     if (!user) {
-      res.status(404).json({
+      return res.status(404).json({
         success: false,
         error: ErrorMessage.USER_NOT_FOUND,
       });
