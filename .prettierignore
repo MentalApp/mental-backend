@@ -1,0 +1,14 @@
+package.json
+package-lock.json
+yarn.lock
+deploy/
+dist/
+helm/
+doc/
+seeds/
+node_modules/
+*.yml
+*.md
+config/*
+*.json
+.nyc_output/
