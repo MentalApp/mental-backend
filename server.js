@@ -7,7 +7,7 @@ const chalk = require('chalk');
 env.config();
 
 const app = express();
-const PORT = process.env.PORT || 3002;
+const PORT = process.env.PORT || 8080;
 
 const morganMiddleware = morgan(function (tokens, req, res) {
   return [
@@ -43,6 +43,8 @@ require('./routers/admin/user.routes')(app);
 require('./routers/admin/test.routes')(app);
 require('./routers/admin/officer_test.routes')(app);
 require('./routers/admin/comment.routes')(app);
+require('./routers/admin/predict.routes')(app);
+
 
 require('./routers/guest/auth.routes')(app);
 require('./routers/guest/officer_test.routes')(app);
