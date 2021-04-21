@@ -13,7 +13,7 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
     }
   };
-  predict.init({
+  Predict.init({
     officerTestId: DataTypes.INTEGER,
     predict: DataTypes.INTEGER,
     conflict: DataTypes.STRING

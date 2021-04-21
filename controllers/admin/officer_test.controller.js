@@ -1,11 +1,13 @@
 const db = require('../../database/models');
 const officerTestSerializer = require('../../serializers/officer_test.serializer');
+const commentSerializer = require('../../serializers/comment.serializer');
 const resultUtil = require('../../servicehelper/service.result');
 const exceptionUtil = require('../../handler_error/exceptionUtil');
 const {DefaultPaging} = require('../../helpers/constant');
 
 const OfficerTest = db.OfficerTest;
 const Test = db.Test;
+const Comment = db.Comment;
 const Op = db.Sequelize.Op;
 
 const officerTestController = {
@@ -77,16 +79,19 @@ const officerTestController = {
       const id = req.params.id;
       const data = await OfficerTest.findByPk(id);
       const test = await Test.findByPk(data.testVersion);
+      const comments = await Comment.findAll({where: { officerId: id }})
+      const commentResponses = comments.map((item) => commentSerializer.new(item));
+
       if (data) {
         serviceResult.code = 200;
         serviceResult.success = true;
-        serviceResult.data = officerTestSerializer.new(data, test);
+        serviceResult.data = officerTestSerializer.new(data, test, commentResponses);
       } else {
         serviceResult.code = 404;
         serviceResult.success = false;
         serviceResult.error = 'Error retrieving Officer Test with id=' + id;
       }
-    } catch {
+    } catch (error) {
       exceptionUtil.handlerErrorAPI(res, serviceResult, error);
     } finally {
       res.json(serviceResult);

@@ -16,7 +16,8 @@ module.exports = (sequelize, DataTypes) => {
   Comment.init({
     officerId: DataTypes.STRING,
     userId: DataTypes.STRING,
-    comment: DataTypes.TEXT
+    comment: DataTypes.TEXT,
+    user: DataTypes.TEXT,
   }, {
     sequelize,
     charset: 'utf8',
