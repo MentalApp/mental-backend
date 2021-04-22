@@ -72,8 +72,8 @@ Follow these instructions to set up this project on local machine.
   npx sequelize-cli db:migrate
   npx sequelize-cli db:seed:all
   
-  test pool v2
-  npx sequelize-cli db:seed --seed v2_test_pool.seed.js
+  <!-- test pool v2
+  npx sequelize-cli db:seed --seed v2_test_pool.seed.js -->
   ```
 - Run
   ```
