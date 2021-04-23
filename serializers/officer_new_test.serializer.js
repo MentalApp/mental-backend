@@ -14,7 +14,9 @@ const officerNewTestSerializer = {
       answer: JSON.parse(officerNewTest.answer),
       otherSymptom: officerNewTest.otherSymptom,
       otherPeople: officerNewTest.otherPeople,
+      predict_id: officerNewTest.predict_id,
       doctorPredict: officerNewTest.doctorPredict,
+      doctorPredictDiagnosis: officerNewTest.doctorPredictDiagnosis,
       predictShallowFilter: officerNewTest.predictShallowFilter,
       predictDeepFilter: officerNewTest.predictDeepFilter,
       testVersion: !test

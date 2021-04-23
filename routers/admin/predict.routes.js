@@ -5,11 +5,10 @@ module.exports = (app) => {
   var router = require('express').Router();
 
   router.get('/', officerTests.findAllPredict);
-  router.get('/:id', officerTests.findOnePredict);
+  router.get('/:id', officerTests.findPredictOnOfficerTest);
   router.post('', officerTests.createPredict);
-  router.put('', officerTests.updatePredict);
+  router.put('/:id', officerTests.updatePredict);
   router.delete('/:id', officerTests.deletePredict);
 
-
-  app.use('/api/admin/predicts',authMidleRole, router);
+  app.use('/api/admin/predicts', authMidleRole, router);
 };

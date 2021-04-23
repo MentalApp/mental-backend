@@ -85,6 +85,14 @@ module.exports = {
         charset: 'utf8',
       },
     );
+    return [
+      queryInterface.addColumn('OfficerNewTests', 'doctorPredictDiagnosis', {
+        type: Sequelize.TINYINT,
+      }),
+      queryInterface.addColumn('OfficerNewTests', 'predict_id', {
+        type: Sequelize.INTEGER,
+      }),
+    ];
   },
   down: async (queryInterface, Sequelize) => {
     await queryInterface.dropTable('OfficerNewTests');

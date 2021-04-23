@@ -1,26 +1,26 @@
 const {Predict} = require('../../database/models');
+const {Sequelize} = require('sequelize');
 
 module.exports = {
-  createPredict: async (predictParam) => {
-    let saveResult = false;
-    if (predictParam && predictParam.officerTestId) {
-      const builder = Predict.build(predictParam);
-      saveResult = await builder.save();
-    }
+  createPredict: async (predict) => {
+    const builder = Predict.build(predict);
+    const saveResult = await builder.save();
     return saveResult;
   },
 
-  updatePredict: async (predictParam) => {
-    let result = false;
-    if (predictParam && predictParam.id) {
-      const predictModel = await Predict.findByPk(predictParam.id);
-      if (predictModel) {
-        const {officerTestId, predict, conflict} = predictParam;
-        const saveParam = {officerTestId: officerTestId, predict: predict, conflict: conflict};
-        result = await predictModel.update(saveParam);
-      }
+  updatePredict: async (id, predictParam) => {
+    const {officerTestId, predict, nameUser, diagnosis, conflict} = predictParam;
+    const predictModel = await Predict.findByPk(id);
+    if (predictModel) {
+      const saveParam = {
+        ...(officerTestId && {officerTestId: officerTestId}),
+        ...(predict && {predict: predict}),
+        ...(diagnosis && {diagnosis: diagnosis}),
+        ...(conflict && {conflict: conflict}),
+        ...(nameUser && {nameUser: nameUser}),
+      };
+      return await predictModel.update(saveParam);
     }
-    return result;
   },
 
   deletePredict: async (id) => {
@@ -36,6 +36,19 @@ module.exports = {
 
   findOnePredict: async (id) => {
     return await Predict.findByPk(id);
+  },
+
+  findPredictMaxDate: async (id) => {
+    return await Predict.findAll({
+      where: {officerTestId: id},
+      order: [['id', 'DESC']],
+      limit: 1,
+    });
+  },
+  //order: [Sequelize.fn('max', Sequelize.col('updatedAt'))],
+
+  findAllPredictOnOfficerTest: async (id) => {
+    return await Predict.findAll({where: {officerTestId: id}});
   },
 
   findByConditionPredict: async ({predict}) => {

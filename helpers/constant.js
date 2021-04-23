@@ -30,5 +30,7 @@ module.exports = {
     UPDATE_IS_FAILED: 'Update is failed.',
     ACCOUNT_IS_UNAUTHORIZE: 'Account is unauthorize.',
     BAD_REQUEST: 'Bad request.',
+    INFORMATIONS_IS_NOT_ENOUGH: 'Informations is not enough.',
+    CREATE_PREDICT_IS_NOT_SUCCESS: 'Create predict is not success.',
   },
 };
