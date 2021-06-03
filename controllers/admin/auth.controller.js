@@ -72,25 +72,18 @@ const authController = {
 
   getCurrentUser: async (req, res) => {
     const token = req.headers[appSetting.authKey];
-    try {
-      const decode = jwt.verify(token, appSetting.jwtConfig.secretKey);
-      if (decode) {
-        const user = await User.findOne({where: {email: decode.email}});
-        return res.status(200).json({
-          message: user,
-        });
-      } else {
-        return res.status(200).json({
-          success: false,
-          error: ErrorMessage.TOKEN_IS_INVALID,
-        });
-      }
-    } catch (error) {
+    const decode = jwt.verify(token, appSetting.jwtConfig.secretKey);
+    if (!decode) {
       return res.status(400).json({
         success: false,
-        error: error.message,
+        error: ErrorMessage.TOKEN_IS_INVALID,
       });
     }
+
+    const user = await User.findOne({where: {email: decode.email}});
+    return res.status(200).json({
+      message: user,
+    });
   },
 };
 
